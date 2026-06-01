@@ -14,15 +14,12 @@ class Etapa1SplashBody extends StatelessWidget {
           'assets/etapa_1_figma/1.Splash Screen - Official Brand.png',
           fit: BoxFit.cover,
         ),
-        // Capa de UI real para que sea responsive y navegable.
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22),
             child: Column(
               children: [
                 const Spacer(),
-                // Ejemplo: un botón real (luego ajustamos el layout exacto
-                // según medidas del Figma para que quede 1:1).
                 SizedBox(
                   width: double.infinity,
                   height: 52,
@@ -47,4 +44,5 @@ class Etapa1SplashBody extends StatelessWidget {
     );
   }
 }
+
 

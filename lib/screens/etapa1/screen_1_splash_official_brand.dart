@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../routes/app_routes.dart';
 import '../../widgets/etapa1_splash_body.dart';
 
 class SplashOfficialBrandScreen extends StatelessWidget {
@@ -10,15 +11,12 @@ class SplashOfficialBrandScreen extends StatelessWidget {
     return Scaffold(
       body: Etapa1SplashBody(
         onContinue: () {
-          // Por ahora solo para demostrar interactividad del UI.
-          // Cuando armemos el resto del onboarding, conectamos a la pantalla 2.
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Continuar (UI)')),
-          );
+          Navigator.of(context).pushNamed(AppRoutes.onboardingSmartAlerts);
         },
       ),
     );
   }
 }
+
 
 
