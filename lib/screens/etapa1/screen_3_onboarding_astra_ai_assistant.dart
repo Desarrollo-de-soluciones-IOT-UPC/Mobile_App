@@ -11,113 +11,164 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
-      isDark: true,
-      icon: Icons.smart_toy_outlined,
-      title: 'Astra AI Assistant',
-      description:
-          'Tu asistente inteligente que aprende tus patrones y te ayuda a proteger tu hogar',
+      onSkip: () {
+        Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppTheme.darkBg,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppTheme.primaryCyan.withValues(alpha: 0.3),
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildCapabilityItem(
-                    icon: Icons.psychology,
-                    title: 'Aprendizaje Automático',
-                    description: 'Se adapta a tu estilo de vida',
-                  ),
-                  const SizedBox(height: 16),
-                  _buildCapabilityItem(
-                    icon: Icons.language,
-                    title: 'Comandos de Voz',
-                    description: 'Controla con tu voz',
-                  ),
-                  const SizedBox(height: 16),
-                  _buildCapabilityItem(
-                    icon: Icons.trending_up,
-                    title: 'Análisis Predictivo',
-                    description: 'Anticipa problemas potenciales',
-                  ),
-                ],
+            const SizedBox(height: 16),
+            Text(
+              'Our advanced intelligence analyzes your environment to provide real-time safety protocols and energy optimization.',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 15,
+                height: 1.8,
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 32),
+            _buildMediaCard(context),
+            const SizedBox(height: 30),
+            Text(
+              'Get personalized recommendations with Astra AI.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                height: 1.3,
+              ),
+            ),
+            const SizedBox(height: 14),
+            const Text(
+              'Astra learns constantly to keep your home safe and energy-efficient without overwhelming you.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+                height: 1.7,
+              ),
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
+      footer: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildProgressBar(activeIndex: 1),
+            const SizedBox(height: 22),
             SizedBox(
               width: double.infinity,
-              height: 52,
+              height: 56,
               child: FilledButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(AppRoutes.onboardingSmartHomeProtection);
+                  Navigator.of(context).pushNamed(AppRoutes.onboardingSmartHomeProtection);
                 },
-                child: const Text('Continuar'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Text('Next →'),
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCapabilityItem({
-    required IconData icon,
-    required String title,
-    required String description,
-  }) {
-    return Row(
-      children: [
-        Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppTheme.primaryCyan.withValues(alpha: 0.2),
+  Widget _buildMediaCard(BuildContext context) {
+    return Container(
+      height: 300,
+      decoration: BoxDecoration(
+        color: AppTheme.cardBg,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: AppTheme.cardBorder),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
-          child: Icon(
-            icon,
-            color: AppTheme.primaryCyan,
-            size: 24,
+        ],
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                gradient: RadialGradient(
+                  colors: [
+                    AppTheme.primaryCyan.withValues(alpha: 0.22),
+                    Colors.transparent,
+                  ],
+                  radius: 0.8,
+                  center: Alignment.topCenter,
+                ),
+              ),
+            ),
           ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(26),
+              color: AppTheme.darkBg,
+              border: Border.all(color: AppTheme.primaryCyan.withValues(alpha: 0.3)),
+            ),
+            child: const Icon(
+              Icons.smart_toy,
+              color: AppTheme.primaryCyan,
+              size: 60,
+            ),
+          ),
+          Positioned(
+            bottom: 22,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: AppTheme.darkBg.withValues(alpha: 0.88),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Text(
+                'Astra AI',
+                style: TextStyle(
+                  color: AppTheme.primaryCyan,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              Text(
-                description,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressBar({required int activeIndex}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(4, (index) {
+        final bool active = index == activeIndex;
+        return Container(
+          width: active ? 28 : 10,
+          height: 6,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            color: active ? AppTheme.primaryBlue : Colors.white12,
+            borderRadius: BorderRadius.circular(99),
+          ),
+        );
+      }),
     );
   }
 }

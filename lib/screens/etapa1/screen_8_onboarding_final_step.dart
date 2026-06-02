@@ -11,90 +11,131 @@ class OnboardingFinalStepScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
-      isDark: true,
-      icon: Icons.check_circle,
-      title: '¡Listo!',
-      description: 'Tu sistema de protección está configurado completamente',
+      onSkip: () {
+        Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.splash1, (route) => false);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppTheme.darkBg,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppTheme.successGreen.withValues(alpha: 0.3),
-                  width: 1,
+            const SizedBox(height: 16),
+            Center(
+              child: Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: AppTheme.darkBg,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: AppTheme.cardBorder),
+                ),
+                child: const Icon(
+                  Icons.shield,
+                  size: 40,
+                  color: AppTheme.primaryCyan,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildCompletionItem(
-                    icon: Icons.home,
-                    title: 'Hogar Configurado',
-                    status: 'Completado',
-                  ),
-                  const SizedBox(height: 16),
-                  _buildCompletionItem(
-                    icon: Icons.sensors,
-                    title: 'Sensores Emparejados',
-                    status: 'Conectados',
-                  ),
-                  const SizedBox(height: 16),
-                  _buildCompletionItem(
-                    icon: Icons.security,
-                    title: 'Protección Activa',
-                    status: 'En línea',
-                  ),
-                ],
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              'Your environment, secured.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 32,
+                fontWeight: FontWeight.w700,
+                height: 1.15,
               ),
             ),
-            const SizedBox(height: 40),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    AppRoutes.splash1,
-                    (route) => false,
-                  );
-                },
-                child: const Text('Ir al Inicio'),
-              ),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
+            _buildResultCard(),
+            const Spacer(),
           ],
+        ),
+      ),
+      footer: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        child: SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: FilledButton(
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.splash1, (route) => false);
+            },
+            style: FilledButton.styleFrom(
+              backgroundColor: AppTheme.primaryBlue,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: const Text('Start Monitoring'),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildCompletionItem({
+  Widget _buildResultCard() {
+    return Container(
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBg,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: AppTheme.cardBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildFeatureRow(
+            icon: Icons.shield,
+            title: 'Setup Complete',
+            subtitle: 'Your protective shield is active.',
+          ),
+          const SizedBox(height: 16),
+          _buildFeatureRow(
+            icon: Icons.analytics,
+            title: 'Real-time Vitals',
+            subtitle: 'Continuous biometric monitoring for early warning.',
+          ),
+          const SizedBox(height: 16),
+          _buildFeatureRow(
+            icon: Icons.network_wifi,
+            title: 'Adaptive Mesh',
+            subtitle: 'Seamless connection between all your smart sensors.',
+          ),
+          const SizedBox(height: 16),
+          _buildFeatureRow(
+            icon: Icons.notifications_active,
+            title: 'Instant Alerts',
+            subtitle: 'Critical notifications even when your device is on silent.',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeatureRow({
     required IconData icon,
     required String title,
-    required String status,
+    required String subtitle,
   }) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 48,
-          height: 48,
+          width: 44,
+          height: 44,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppTheme.successGreen.withValues(alpha: 0.2),
+            color: AppTheme.primaryCyan.withValues(alpha: 0.18),
+            borderRadius: BorderRadius.circular(14),
           ),
           child: Icon(
             icon,
-            color: AppTheme.successGreen,
-            size: 24,
+            color: AppTheme.primaryCyan,
+            size: 22,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 14),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,24 +145,20 @@ class OnboardingFinalStepScreen extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
+              const SizedBox(height: 4),
               Text(
-                status,
+                subtitle,
                 style: TextStyle(
-                  color: AppTheme.successGreen,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  color: Colors.white70,
+                  fontSize: 13,
+                  height: 1.6,
                 ),
               ),
             ],
           ),
-        ),
-        Icon(
-          Icons.verified,
-          color: AppTheme.successGreen,
-          size: 24,
         ),
       ],
     );

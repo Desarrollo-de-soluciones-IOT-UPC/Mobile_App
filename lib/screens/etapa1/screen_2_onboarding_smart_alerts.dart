@@ -11,109 +11,182 @@ class OnboardingSmartAlertsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
-      isDark: true,
-      icon: Icons.notifications_active,
-      title: 'Smart Alerts',
-      description:
-          'Recibe notificaciones inteligentes y en tiempo real sobre eventos importantes en tu hogar',
+      onSkip: () {
+        Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppTheme.darkBg,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildFeatureItem(
-                    icon: Icons.bolt,
-                    title: 'Alertas Instantáneas',
-                    description: 'Notificaciones en tiempo real',
-                  ),
-                  const SizedBox(height: 16),
-                  _buildFeatureItem(
-                    icon: Icons.tune,
-                    title: 'Personalizables',
-                    description: 'Configura según tus necesidades',
-                  ),
-                  const SizedBox(height: 16),
-                  _buildFeatureItem(
-                    icon: Icons.shield_outlined,
-                    title: 'Seguridad Total',
-                    description: 'Protección completa de tu hogar',
-                  ),
-                ],
+            _buildAlertCard(context),
+            const SizedBox(height: 32),
+            Text(
+              'Receive alerts before radiation becomes dangerous.',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 32,
+                fontWeight: FontWeight.w700,
+                height: 1.1,
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 16),
+            Text(
+              'EmSafe continuously monitors your environment and provides smart, actionable recommendations to minimize EMF exposure.',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 15,
+                height: 1.8,
+              ),
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
+      footer: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildProgressBar(activeIndex: 0),
+            const SizedBox(height: 22),
             SizedBox(
               width: double.infinity,
-              height: 52,
+              height: 56,
               child: FilledButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed(AppRoutes.onboardingAstraAssistant);
+                  Navigator.of(context).pushNamed(AppRoutes.onboardingAstraAssistant);
                 },
-                child: const Text('Continuar'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Text('Next'),
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFeatureItem({
-    required IconData icon,
-    required String title,
-    required String description,
-  }) {
-    return Row(
-      children: [
-        Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppTheme.primaryCyan.withValues(alpha: 0.2),
-          ),
-          child: Icon(
-            icon,
-            color: AppTheme.primaryCyan,
-            size: 24,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildAlertCard(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBg.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppTheme.cardBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  color: AppTheme.primaryBlue.withValues(alpha: 0.15),
+                ),
+                child: const Icon(
+                  Icons.router_outlined,
+                  color: AppTheme.primaryBlue,
                 ),
               ),
-              Text(
-                description,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Living Room Router',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: const [
+                        Text(
+                          'WARNING: ',
+                          style: TextStyle(
+                            color: AppTheme.warningOrange,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          'RADIATION SPIKE',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const Text(
+                'NOW',
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: Colors.white54,
                   fontSize: 12,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 18),
+          const Text(
+            'High EMF emissions detected. Consider moving the router at least 2 meters away from high-occupancy areas.',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 14,
+              height: 1.7,
+            ),
+          ),
+          const SizedBox(height: 22),
+          SizedBox(
+            width: double.infinity,
+            height: 46,
+            child: FilledButton(
+              onPressed: () {},
+              style: FilledButton.styleFrom(
+                backgroundColor: AppTheme.warningOrange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              child: const Text('Optimize Location'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressBar({required int activeIndex}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(4, (index) {
+        final bool active = index == activeIndex;
+        return Container(
+          width: active ? 28 : 10,
+          height: 6,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            color: active ? AppTheme.primaryBlue : Colors.white12,
+            borderRadius: BorderRadius.circular(99),
+          ),
+        );
+      }),
     );
   }
 }

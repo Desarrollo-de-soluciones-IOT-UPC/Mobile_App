@@ -4,27 +4,23 @@ import '../theme/app_theme.dart';
 
 /// Wrapper mejorado para pantallas onboarding.
 /// - background: color base
-/// - isDark: usa tema oscuro o claro
-/// - icon: ícono opcional a mostrar en la parte superior
-/// - title: título principal
-/// - description: descripción opcional
-/// - child: widgets nativos (buttons, inputs, etc.)
+/// - showBrandHeader: muestra el header superior con logo + Skip
+/// - child: widgets nativos (contenido de la pantalla)
+/// - footer: widget fijo en la parte inferior (botón, indicadores)
 class OnboardingPageSolid extends StatelessWidget {
   final Color background;
   final Widget child;
-  final IconData? icon;
-  final String? title;
-  final String? description;
-  final bool isDark;
+  final bool showBrandHeader;
+  final VoidCallback? onSkip;
+  final Widget? footer;
 
   const OnboardingPageSolid({
     super.key,
     required this.background,
     required this.child,
-    this.icon,
-    this.title,
-    this.description,
-    this.isDark = false,
+    this.showBrandHeader = true,
+    this.onSkip,
+    this.footer,
   });
 
   @override
@@ -34,66 +30,57 @@ class OnboardingPageSolid extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Header opcional con ícono y títulos
-            if (icon != null || title != null)
+            if (showBrandHeader)
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                child: Column(
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                child: Row(
                   children: [
-                    if (icon != null)
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isDark
-                              ? AppTheme.darkBg
-                              : Colors.grey.shade200,
+                    Row(
+                      children: [
+                        Container(
+                          width: 34,
+                          height: 34,
+                          decoration: BoxDecoration(
+                            color: AppTheme.darkBg,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.security,
+                            color: AppTheme.primaryCyan,
+                            size: 18,
+                          ),
                         ),
-                        child: Icon(
-                          icon,
-                          size: 40,
-                          color: isDark
-                              ? AppTheme.primaryCyan
-                              : AppTheme.primaryBlue,
+                        const SizedBox(width: 12),
+                        const Text(
+                          'EmSafe',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                    if (icon != null) const SizedBox(height: 20),
-                    if (title != null)
-                      Text(
-                        title!,
-                        style:
-                            Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: isDark
-                                      ? AppTheme.primaryCyan
-                                      : AppTheme.darkNavy,
-                                  fontSize: 28,
-                                ),
-                        textAlign: TextAlign.center,
-                      ),
-                    if (description != null) const SizedBox(height: 12),
-                    if (description != null)
-                      Text(
-                        description!,
-                        style:
-                            Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: isDark
-                                      ? Colors.white70
-                                      : Colors.black54,
-                                  fontSize: 16,
-                                  height: 1.5,
-                                ),
-                        textAlign: TextAlign.center,
+                      ],
+                    ),
+                    const Spacer(),
+                    if (onSkip != null)
+                      TextButton(
+                        onPressed: onSkip,
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white70,
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        child: const Text('Skip'),
                       ),
                   ],
                 ),
               ),
-
-            // Contenido flexible
             Expanded(
               child: child,
             ),
+            if (footer != null) ...[footer!],
           ],
         ),
       ),

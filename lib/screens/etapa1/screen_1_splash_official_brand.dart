@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/splash_auto_navigate.dart';
 
 class SplashOfficialBrandScreen extends StatelessWidget {
   const SplashOfficialBrandScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return _SplashContent();
+    return const _SplashContent();
   }
 }
 
@@ -22,17 +21,16 @@ class _SplashContent extends StatefulWidget {
 
 class _SplashContentState extends State<_SplashContent>
     with TickerProviderStateMixin {
-  late AnimationController _logoController;
-  late AnimationController _textController;
-  late AnimationController _connectionController;
-  late Animation<double> _logoScale;
-  late Animation<double> _textOpacity;
+  late final AnimationController _logoController;
+  late final AnimationController _textController;
+  late final AnimationController _connectionController;
+  late final Animation<double> _logoScale;
+  late final Animation<double> _textOpacity;
 
   @override
   void initState() {
     super.initState();
     _setupAnimations();
-    // Navegar después de 5 segundos
     Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
         Navigator.of(context).pushReplacementNamed(AppRoutes.onboardingSmartAlerts);
@@ -41,7 +39,6 @@ class _SplashContentState extends State<_SplashContent>
   }
 
   void _setupAnimations() {
-    // Animación del logo (escala con rebote)
     _logoController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -51,7 +48,6 @@ class _SplashContentState extends State<_SplashContent>
       CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
     );
 
-    // Animación del texto (fade in)
     _textController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -61,16 +57,16 @@ class _SplashContentState extends State<_SplashContent>
       CurvedAnimation(parent: _textController, curve: Curves.easeIn),
     );
 
-    // Animación del indicador de conexión (pulsante)
     _connectionController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
 
-    // Iniciar animaciones con delays escalonados
     _logoController.forward();
     Future.delayed(const Duration(milliseconds: 400), () {
-      if (mounted) _textController.forward();
+      if (mounted) {
+        _textController.forward();
+      }
     });
   }
 
@@ -93,166 +89,157 @@ class _SplashContentState extends State<_SplashContent>
             end: Alignment.bottomRight,
             colors: [
               AppTheme.darkNavy,
-              const Color(0xFF1a2f4a),
+              const Color(0xFF101C2E),
             ],
           ),
         ),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Logo con animación
-                ScaleTransition(
-                  scale: _logoScale,
-                  child: Container(
-                    width: 180,
-                    height: 180,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.primaryCyan.withValues(alpha: 0.3),
-                          blurRadius: 40,
-                          spreadRadius: 10,
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ScaleTransition(
+                    scale: _logoScale,
+                    child: Container(
+                      width: 220,
+                      height: 220,
+                      decoration: BoxDecoration(
+                        color: AppTheme.darkBg,
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(
+                          color: AppTheme.primaryCyan.withValues(alpha: 0.22),
+                          width: 1.5,
                         ),
-                      ],
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.primaryCyan.withValues(alpha: 0.18),
+                            blurRadius: 40,
+                            spreadRadius: 8,
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 160,
+                            height: 160,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(32),
+                              border: Border.all(
+                                color: AppTheme.primaryCyan.withValues(alpha: 0.35),
+                                width: 1.5,
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.security,
+                            color: AppTheme.primaryCyan,
+                            size: 86,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Stack(
-                      alignment: Alignment.center,
+                  ),
+                  const SizedBox(height: 40),
+                  FadeTransition(
+                    opacity: _textOpacity,
+                    child: Column(
                       children: [
-                        // Círculo de fondo con borde
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppTheme.primaryCyan,
-                              width: 2,
-                            ),
+                        const Text(
+                          'EmSafe',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 44,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1.2,
                           ),
                         ),
-                        // Icono del shield con heartbeat
-                        Icon(
-                          Icons.security,
-                          size: 80,
-                          color: AppTheme.primaryCyan,
+                        const SizedBox(height: 14),
+                        Container(
+                          width: 80,
+                          height: 3,
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryBlue,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(height: 46),
+                        Text(
+                          'MONITOR YOUR ENVIRONMENT.',
+                          style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.86),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.5,
+                            height: 1.8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'PROTECT YOUR FUTURE.',
+                          style: const TextStyle(
+                            color: AppTheme.primaryBlue,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                            height: 1.8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 50),
+                        ScaleTransition(
+                          scale: Tween<double>(begin: 0.82, end: 1.0).animate(
+                            CurvedAnimation(
+                              parent: _connectionController,
+                              curve: Curves.easeInOut,
+                            ),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 14,
+                              horizontal: 18,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.darkBg.withValues(alpha: 0.92),
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: AppTheme.primaryBlue.withValues(alpha: 0.18),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppTheme.primaryBlue,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                const Text(
+                                  'SECURING CONNECTION ...',
+                                  style: TextStyle(
+                                    color: AppTheme.primaryBlue,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 40),
-
-                // Texto principal con animación fade
-                FadeTransition(
-                  opacity: _textOpacity,
-                  child: Column(
-                    children: [
-                      Text(
-                        'EmSafe',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(
-                              color: AppTheme.primaryCyan,
-                              fontSize: 48,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 2,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Divider azul
-                      Container(
-                        width: 60,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryBlue,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // Lema principal
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Column(
-                          children: [
-                            Text(
-                              'MONITOR YOUR ENVIRONMENT.',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: 1.5,
-                                height: 1.6,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              'PROTECT YOUR FUTURE.',
-                              style: TextStyle(
-                                color: AppTheme.primaryBlue,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: 1.5,
-                                height: 1.6,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 48),
-
-                      // Indicador de conexión animado
-                      ScaleTransition(
-                        scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                          CurvedAnimation(
-                            parent: _connectionController,
-                            curve: Curves.easeInOut,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppTheme.primaryBlue,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppTheme.primaryBlue.withValues(alpha: 0.6),
-                                    blurRadius: 8,
-                              spreadRadius: 2,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'SECURING CONNECTION ...',
-                              style: TextStyle(
-                                color: AppTheme.primaryBlue,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
