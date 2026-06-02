@@ -37,15 +37,17 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
       onSkip: () {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
+      showBrandHeader: false,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 18),
+            const Text(
               'Searching for Sensors',
-              style: const TextStyle(
+              textAlign: TextAlign.center,
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
                 fontWeight: FontWeight.w700,
@@ -53,15 +55,16 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
               ),
             ),
             const SizedBox(height: 12),
-            Text(
+            const Text(
               'Ensure your device is powered and nearby.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 15,
                 height: 1.7,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 30),
             _buildScanner(),
             const SizedBox(height: 34),
             _buildDeviceCard(),
@@ -179,8 +182,8 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               Icon(
                 Icons.memory,
                 color: AppTheme.primaryCyan,
@@ -205,9 +208,9 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
             ],
           ),
           const SizedBox(height: 16),
-          _buildDetailRow('Signal Strength', '•••••'),
+          _buildDetailRow('Signal Strength', 'Excellent'),
           const SizedBox(height: 12),
-          _buildDetailRow('Firmware', 'v2.4.0-Stable'),
+          _buildDetailRow('Firmware', 'v2.4.0 Stable'),
           const SizedBox(height: 12),
           _buildDetailRow('Security Protocol', 'TLS 1.3 / AES-256'),
         ],

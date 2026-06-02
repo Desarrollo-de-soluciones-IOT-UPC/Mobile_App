@@ -14,6 +14,7 @@ class PairYourSensorScreen extends StatelessWidget {
       onSkip: () {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
+      showBrandHeader: false,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
@@ -48,7 +49,7 @@ class PairYourSensorScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               'EMSafe S1 is now synced with your secure session. Real-time monitoring active.',
               textAlign: TextAlign.center,
               style: TextStyle(

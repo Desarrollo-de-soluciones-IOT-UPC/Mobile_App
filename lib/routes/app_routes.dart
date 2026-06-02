@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../screens/etapa1/screen_1_splash_em_safe_updated.dart';
 import '../screens/etapa1/screen_1_splash_official_brand.dart';
 import '../screens/etapa1/screen_2_onboarding_smart_alerts.dart';
 import '../screens/etapa1/screen_3_onboarding_astra_ai_assistant.dart';
@@ -11,6 +12,7 @@ import '../screens/etapa1/screen_8_onboarding_final_step.dart';
 
 class AppRoutes {
   static const String splash1 = '/etapa1/screen1/splash_official_brand';
+  static const String splashUpdated = '/etapa1/screen1/splash_em_safe_updated';
   static const String onboardingSmartAlerts = '/etapa1/screen2/onboarding_smart_alerts';
   static const String onboardingAstraAssistant = '/etapa1/screen3/onboarding_astra_ai_assistant';
   static const String onboardingSmartHomeProtection =
@@ -22,6 +24,7 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> get routes => {
         splash1: (context) => const SplashOfficialBrandScreen(),
+        splashUpdated: (context) => const SplashEmSafeUpdatedScreen(),
         onboardingSmartAlerts: (context) => const OnboardingSmartAlertsScreen(),
         onboardingAstraAssistant: (context) => const OnboardingAstraAIAssistantScreen(),
         onboardingSmartHomeProtection: (context) => const OnboardingSmartHomeProtectionScreen(),

@@ -14,15 +14,17 @@ class HomeProfileSetupScreen extends StatelessWidget {
       onSkip: () {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
+      showBrandHeader: false,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 18),
+            const Text(
               'Secure Your Home',
-              style: const TextStyle(
+              textAlign: TextAlign.center,
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
                 fontWeight: FontWeight.w700,
@@ -30,8 +32,9 @@ class HomeProfileSetupScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            Text(
+            const Text(
               'Establish your primary monitoring zone to receive hyper-local radiation alerts and safety protocols.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 15,
@@ -232,10 +235,10 @@ class HomeProfileSetupScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Nearby Detectors',
                   style: TextStyle(

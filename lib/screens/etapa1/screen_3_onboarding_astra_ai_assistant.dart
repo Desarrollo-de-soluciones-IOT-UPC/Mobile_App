@@ -14,27 +14,29 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
       onSkip: () {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
+      showBrandHeader: false,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 18),
+            const Text(
               'Our advanced intelligence analyzes your environment to provide real-time safety protocols and energy optimization.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 15,
                 height: 1.8,
               ),
             ),
-            const SizedBox(height: 32),
-            _buildMediaCard(context),
-            const SizedBox(height: 30),
-            Text(
+            const SizedBox(height: 26),
+            _buildMediaCard(),
+            const SizedBox(height: 26),
+            const Text(
               'Get personalized recommendations with Astra AI.',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -84,9 +86,9 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMediaCard(BuildContext context) {
+  Widget _buildMediaCard() {
     return Container(
-      height: 300,
+      height: 280,
       decoration: BoxDecoration(
         color: AppTheme.cardBg,
         borderRadius: BorderRadius.circular(28),
@@ -118,17 +120,19 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
             ),
           ),
           Container(
-            width: 120,
-            height: 120,
+            width: 130,
+            height: 130,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(26),
+              borderRadius: BorderRadius.circular(30),
               color: AppTheme.darkBg,
               border: Border.all(color: AppTheme.primaryCyan.withValues(alpha: 0.3)),
             ),
-            child: const Icon(
-              Icons.smart_toy,
-              color: AppTheme.primaryCyan,
-              size: 60,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Image.asset(
+                'assets/IMG_ETAPA_1/AI_PHOTO.jpeg',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Positioned(

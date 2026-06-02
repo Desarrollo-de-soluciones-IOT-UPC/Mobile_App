@@ -12,42 +12,48 @@ class OnboardingFinalStepScreen extends StatelessWidget {
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
       onSkip: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.splash1, (route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRoutes.splash1,
+          (route) => false,
+        );
       },
+      showBrandHeader: false,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             Center(
               child: Container(
-                width: 90,
-                height: 90,
+                width: 96,
+                height: 96,
                 decoration: BoxDecoration(
                   color: AppTheme.darkBg,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(28),
                   border: Border.all(color: AppTheme.cardBorder),
                 ),
-                child: const Icon(
-                  Icons.shield,
-                  size: 40,
-                  color: AppTheme.primaryCyan,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(28),
+                  child: Image.asset(
+                    'assets/IMG_ETAPA_1/logo.jpeg',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 20),
             const Text(
               'Your environment, secured.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 32,
+                fontSize: 30,
                 fontWeight: FontWeight.w700,
-                height: 1.15,
+                height: 1.12,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
             _buildResultCard(),
             const Spacer(),
           ],
@@ -60,7 +66,10 @@ class OnboardingFinalStepScreen extends StatelessWidget {
           height: 56,
           child: FilledButton(
             onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.splash1, (route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoutes.splash1,
+                (route) => false,
+              );
             },
             style: FilledButton.styleFrom(
               backgroundColor: AppTheme.primaryBlue,
@@ -77,33 +86,32 @@ class OnboardingFinalStepScreen extends StatelessWidget {
 
   Widget _buildResultCard() {
     return Container(
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppTheme.cardBg,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: AppTheme.cardBorder),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildFeatureRow(
             icon: Icons.shield,
             title: 'Setup Complete',
             subtitle: 'Your protective shield is active.',
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
           _buildFeatureRow(
             icon: Icons.analytics,
             title: 'Real-time Vitals',
             subtitle: 'Continuous biometric monitoring for early warning.',
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
           _buildFeatureRow(
             icon: Icons.network_wifi,
             title: 'Adaptive Mesh',
             subtitle: 'Seamless connection between all your smart sensors.',
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
           _buildFeatureRow(
             icon: Icons.notifications_active,
             title: 'Instant Alerts',

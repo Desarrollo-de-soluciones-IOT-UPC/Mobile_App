@@ -17,13 +17,14 @@ class OnboardingSmartAlertsScreen extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildAlertCard(context),
-            const SizedBox(height: 32),
-            Text(
+            const SizedBox(height: 28),
+            const Text(
               'Receive alerts before radiation becomes dangerous.',
-              style: const TextStyle(
+              textAlign: TextAlign.center,
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
                 fontWeight: FontWeight.w700,
@@ -31,8 +32,9 @@ class OnboardingSmartAlertsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               'EmSafe continuously monitors your environment and provides smart, actionable recommendations to minimize EMF exposure.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 15,

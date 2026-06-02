@@ -31,9 +31,9 @@ class _SplashContentState extends State<_SplashContent>
   void initState() {
     super.initState();
     _setupAnimations();
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed(AppRoutes.onboardingSmartAlerts);
+        Navigator.of(context).pushReplacementNamed(AppRoutes.splashUpdated);
       }
     });
   }
@@ -100,6 +100,7 @@ class _SplashContentState extends State<_SplashContent>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 10),
                   ScaleTransition(
                     scale: _logoScale,
                     child: Container(
@@ -134,10 +135,14 @@ class _SplashContentState extends State<_SplashContent>
                               ),
                             ),
                           ),
-                          const Icon(
-                            Icons.security,
-                            color: AppTheme.primaryCyan,
-                            size: 86,
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(28),
+                            child: Image.asset(
+                              'assets/IMG_ETAPA_1/logo.jpeg',
+                              width: 140,
+                              height: 140,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ],
                       ),
@@ -170,7 +175,7 @@ class _SplashContentState extends State<_SplashContent>
                         Text(
                           'MONITOR YOUR ENVIRONMENT.',
                           style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.86),
+                            color: Colors.white.withValues(alpha: 0.86),
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                             letterSpacing: 1.5,

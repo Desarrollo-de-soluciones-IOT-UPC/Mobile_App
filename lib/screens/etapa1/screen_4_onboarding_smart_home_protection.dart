@@ -14,25 +14,29 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
       onSkip: () {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
+      showBrandHeader: false,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 18),
             _buildConnectedSystem(),
-            const SizedBox(height: 32),
-            Text(
+            const SizedBox(height: 26),
+            const Text(
               'Protect your devices and smart home automatically.',
-              style: const TextStyle(
+              textAlign: TextAlign.center,
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
                 height: 1.2,
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 14),
+            const Text(
               'Advanced AI monitoring shields every connection, ensuring your digital life remains private and secure without lifting a finger.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white70,
                 fontSize: 15,
@@ -131,8 +135,9 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _smallDeviceCard(icon: Icons.gamepad),
-              _smallDeviceCard(icon: Icons.lightbulb_outline),
+              Expanded(child: _smallDeviceCard(icon: Icons.gamepad)),
+              const SizedBox(width: 10),
+              Expanded(child: _smallDeviceCard(icon: Icons.lightbulb_outline)),
             ],
           ),
         ],
@@ -141,19 +146,17 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
   }
 
   Widget _smallDeviceCard({required IconData icon}) {
-    return Expanded(
-      child: Container(
-        height: 90,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: AppTheme.darkBg,
-        ),
-        child: Center(
-          child: Icon(
-            icon,
-            color: Colors.white70,
-            size: 28,
-          ),
+    return Container(
+      height: 90,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: AppTheme.darkBg,
+      ),
+      child: Center(
+        child: Icon(
+          icon,
+          color: Colors.white70,
+          size: 28,
         ),
       ),
     );
