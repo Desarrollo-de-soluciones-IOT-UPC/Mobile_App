@@ -13,25 +13,31 @@ class PairingSensorsScreen extends StatefulWidget {
 
 class _PairingSensorsScreenState extends State<PairingSensorsScreen>
     with TickerProviderStateMixin {
-  late final AnimationController _scanController;
+  late final AnimationController _radarController;
 
   @override
   void initState() {
     super.initState();
-    _scanController = AnimationController(
-      duration: const Duration(seconds: 3),
-      vsync: this,
-    )..repeat();
+    _radarController =
+        AnimationController(duration: const Duration(seconds: 3), vsync: this)
+          ..repeat();
   }
 
   @override
   void dispose() {
-    _scanController.dispose();
+    _radarController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final double scale = (size.width / 390).clamp(0.85, 1.15);
+
+    final double sidePadding = (16 * scale).clamp(12, 22);
+    final double titleFont = (24 * scale).clamp(18, 32);
+    final double bodyFont = (16 * scale).clamp(13, 18);
+
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
       onSkip: () {
@@ -39,47 +45,49 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
       },
       showBrandHeader: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 18),
-            const Text(
+            SizedBox(height: (10 * scale).clamp(6, 18)),
+            Text(
               'Searching for Sensors',
+
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 32,
-                fontWeight: FontWeight.w700,
-                height: 1.15,
+                fontSize: titleFont,
+                fontWeight: FontWeight.w600,
+                height: 1.2,
               ),
             ),
-            const SizedBox(height: 12),
-            const Text(
+            SizedBox(height: (8 * scale).clamp(6, 16)),
+            Text(
               'Ensure your device is powered and nearby.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white70,
-                fontSize: 15,
-                height: 1.7,
+                fontSize: bodyFont,
+                height: 1.6,
               ),
             ),
-            const SizedBox(height: 30),
-            _buildScanner(),
-            const SizedBox(height: 34),
-            _buildDeviceCard(),
-            const Spacer(),
+            SizedBox(height: (24 * scale).clamp(16, 40)),
+            _buildRadar(scale: scale),
+            SizedBox(height: (16 * scale).clamp(10, 30)),
+            _buildStatus(scale: scale),
+            SizedBox(height: (18 * scale).clamp(10, 30)),
+            Expanded(child: _buildDeviceCard(scale: scale)),
           ],
         ),
       ),
       footer: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: (56 * scale).clamp(46, 70),
               child: FilledButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRoutes.pairYourSensor);
@@ -87,18 +95,16 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
                 style: FilledButton.styleFrom(
                   backgroundColor: AppTheme.primaryBlue,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(16 * scale),
                   ),
                 ),
-                child: const Text('Pair Device'),
-              ),
-            ),
-            const SizedBox(height: 14),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Not your device?',
-                style: TextStyle(color: Colors.white54),
+                child: Text(
+                  'Pair Device',
+                  style: TextStyle(
+                    fontSize: (16 * scale).clamp(14, 18),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ],
@@ -107,63 +113,85 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
     );
   }
 
-  Widget _buildScanner() {
+  Widget _buildRadar({required double scale}) {
+    final double pulse = (280 * scale).clamp(200, 360);
+    final double radarBox = (326.22 * scale).clamp(260, 420);
+
     return SizedBox(
-      height: 280,
+      height: radarBox,
+      width: double.infinity,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Container(
-            width: 220,
-            height: 220,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white12,
-                width: 1.5,
-              ),
-            ),
-          ),
-          RotationTransition(
-            turns: _scanController,
+          // Outer glows
+          Positioned.fill(
             child: Container(
-              width: 180,
-              height: 180,
+              margin: EdgeInsets.all((1 * scale).clamp(0.5, 6)),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppTheme.primaryBlue.withValues(alpha: 0.25),
+                  color: AppTheme.primaryCyan.withValues(alpha: 0.25),
+                  width: 1,
+                ),
+              ),
+              child: null,
+            ),
+          ),
+
+          // Radar pulse ring
+          RotationTransition(
+            turns: _radarController,
+            child: Container(
+              width: pulse,
+              height: pulse,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                borderRadius: null,
+
+                border: Border.all(
+                  color: AppTheme.primaryCyan.withValues(alpha: 0.25),
                   width: 2,
                 ),
               ),
             ),
           ),
+
+          // Center icon
           Container(
-            width: 112,
-            height: 112,
+            width: (80 * scale).clamp(64, 120),
+            height: (80 * scale).clamp(64, 120),
             decoration: BoxDecoration(
-              color: AppTheme.cardBg,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppTheme.cardBorder),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.wifi_tethering,
-                color: AppTheme.primaryCyan,
-                size: 40,
+              color: const Color(0xFF00C0E9).withOpacity(0.12),
+              borderRadius: BorderRadius.circular(12 * scale),
+              border: Border.all(
+                color: AppTheme.primaryCyan.withValues(alpha: 0.35),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.primaryCyan.withValues(alpha: 0.15),
+                  blurRadius: (40 * scale).clamp(20, 60),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.sensors,
+              size: (34 * scale).clamp(26, 52),
+              color: AppTheme.primaryCyan,
             ),
           ),
+
+          // Floating dots
           Positioned(
-            top: 40,
-            right: 40,
-            child: Container(
-              width: 18,
-              height: 18,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppTheme.primaryCyan,
-              ),
+            right: (40 * scale).clamp(20, 60),
+            top: (16 * scale).clamp(8, 30),
+            child: _dot(scale: scale, color: AppTheme.primaryCyan.withValues(alpha: 1)),
+          ),
+          Positioned(
+            left: (24 * scale).clamp(10, 40),
+            bottom: (48 * scale).clamp(20, 60),
+            child: _dot(
+              scale: scale,
+              color: AppTheme.primaryCyan.withValues(alpha: 0.5),
             ),
           ),
         ],
@@ -171,71 +199,156 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
     );
   }
 
-  Widget _buildDeviceCard() {
+  Widget _dot({required double scale, required Color color}) {
+    final double s = (8 * scale).clamp(5, 14);
     return Container(
-      padding: const EdgeInsets.all(22),
+      width: s,
+      height: s,
       decoration: BoxDecoration(
-        color: AppTheme.cardBg,
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: AppTheme.cardBorder),
+        shape: BoxShape.circle,
+        color: color,
+        boxShadow: [
+          BoxShadow(
+            color: color,
+            blurRadius: (8 * scale).clamp(6, 18),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatus({required double scale}) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: (8 * scale).clamp(6, 14),
+              height: (8 * scale).clamp(6, 14),
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFF65DAFF),
+              ),
+            ),
+            SizedBox(width: (8 * scale).clamp(4, 14)),
+            Text(
+              'LIVE SCAN ACTIVE',
+              style: TextStyle(
+                color: AppTheme.primaryCyan,
+                fontSize: (12 * scale).clamp(10, 16),
+                fontWeight: FontWeight.w600,
+                letterSpacing: 2.0 * scale,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDeviceCard({required double scale}) {
+    return Container(
+      margin: EdgeInsets.only(bottom: (8 * scale).clamp(0, 12)),
+      padding: EdgeInsets.all((24 * scale).clamp(16, 32)),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1D1F28).withOpacity(0.65),
+        borderRadius: BorderRadius.circular(8 * scale),
+        border: Border.all(color: AppTheme.cardBorder, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.35),
+            blurRadius: (32 * scale).clamp(18, 60),
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.memory,
-                color: AppTheme.primaryCyan,
-                size: 22,
-              ),
-              SizedBox(width: 12),
               Expanded(
-                child: Text(
-                  'EMSafe S1 Hub detected',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'EMSafe S1 Hub detected',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: (20 * scale).clamp(16, 24),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: (8 * scale).clamp(4, 14)),
+                    Text(
+                      'Secure Protocol',
+                      style: TextStyle(
+                        color: Colors.white54,
+                        fontSize: (14 * scale).clamp(12, 18),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Icon(
                 Icons.check_circle,
                 color: AppTheme.primaryCyan,
-                size: 22,
+                size: (24 * scale).clamp(18, 34),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          _buildDetailRow('Signal Strength', 'Excellent'),
-          const SizedBox(height: 12),
-          _buildDetailRow('Firmware', 'v2.4.0 Stable'),
-          const SizedBox(height: 12),
-          _buildDetailRow('Security Protocol', 'TLS 1.3 / AES-256'),
+          SizedBox(height: (16 * scale).clamp(10, 28)),
+          Divider(color: Colors.white10),
+          SizedBox(height: (12 * scale).clamp(6, 18)),
+          _infoBar(scale: scale),
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _infoBar({required double scale}) {
+    return Column(
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white54,
-            fontSize: 13,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Signal Strength',
+              style: TextStyle(
+                color: Colors.white54,
+                fontSize: (14 * scale).clamp(12, 18),
+              ),
+            ),
+            Text(
+              'Excellent',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: (14 * scale).clamp(12, 18),
+              ),
+            ),
+          ],
         ),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
+        SizedBox(height: (12 * scale).clamp(6, 18)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Firmware',
+              style: TextStyle(
+                color: Colors.white54,
+                fontSize: (14 * scale).clamp(12, 18),
+              ),
+            ),
+            Text(
+              'v2.4.0 Stable',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: (14 * scale).clamp(12, 18),
+              ),
+            ),
+          ],
         ),
       ],
     );

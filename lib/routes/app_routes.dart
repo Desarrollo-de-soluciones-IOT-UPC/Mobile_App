@@ -8,6 +8,7 @@ import '../screens/etapa1/screen_4_onboarding_smart_home_protection.dart';
 import '../screens/etapa1/screen_5_home_profile_setup.dart';
 import '../screens/etapa1/screen_6_pairing_sensors.dart';
 import '../screens/etapa1/screen_7_pair_your_sensor.dart';
+
 import '../screens/etapa1/screen_8_onboarding_final_step.dart';
 
 class AppRoutes {

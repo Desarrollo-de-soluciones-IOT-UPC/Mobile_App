@@ -389,7 +389,7 @@ class _BentoCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: 104 * scale),
+              const Spacer(),
             ],
           ),
           const Spacer(),
