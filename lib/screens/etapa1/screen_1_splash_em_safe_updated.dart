@@ -41,7 +41,7 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
               children: [
                 const DecoratedBox(
                   decoration: BoxDecoration(
-                    color: Color(0xFF10131B),
+                  color: AppTheme.darkNavy,
                   ),
                 ),
                 Column(
