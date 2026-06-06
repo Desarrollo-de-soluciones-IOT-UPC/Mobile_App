@@ -11,6 +11,8 @@ import '../screens/etapa1/screen_7_pair_your_sensor.dart';
 
 import '../screens/etapa1/screen_8_onboarding_final_step.dart';
 
+import 'etapa2_routes.dart';
+
 class AppRoutes {
   static const String splash1 = '/etapa1/screen1/splash_official_brand';
   static const String splashUpdated = '/etapa1/screen1/splash_em_safe_updated';
@@ -34,7 +36,9 @@ class AppRoutes {
         // Interceptado en main.dart con PageRouteBuilder(opaque:false) para efecto cristal.
         // pairYourSensor: (context) => const PairYourSensorScreen(),
         onboardingFinalStep: (context) => const OnboardingFinalStepScreen(),
+        ...Etapa2Routes.routes,
       };
 }
+
 
 
