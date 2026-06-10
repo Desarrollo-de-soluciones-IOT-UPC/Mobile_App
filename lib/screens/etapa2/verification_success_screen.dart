@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 /// Verification Success (Etapa 2)
-/// Scroll-safe + responsive (evita overflows en móviles).
+/// Responsive sin artboard rígido.
 class VerificationSuccessScreen extends StatelessWidget {
   const VerificationSuccessScreen({super.key});
 
@@ -12,110 +12,65 @@ class VerificationSuccessScreen extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     final double scale = (size.width / 390).clamp(0.85, 1.15);
 
-    final double artW = 426 * scale;
-    final double artH = 1160 * scale;
-
-    final double headerH = 64 * scale;
-    final double mainTopPad = 64 * scale;
-
     return Scaffold(
       backgroundColor: const Color(0xFF0B0F19),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: Center(
-                child: SizedBox(
-                  width: artW,
-                  height: artH,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      // Background decoration overlays
-                      Positioned(
-                        top: -116 * scale,
-                        right: -39 * scale,
-                        width: 500 * scale,
-                        height: 500 * scale,
-                        child: Opacity(
-                          opacity: 1,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12 * scale),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaX: 60 * scale,
-                                sigmaY: 60 * scale,
-                              ),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(178, 197, 255, 0.05),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: -116 * scale,
-                        left: -39 * scale,
-                        width: 500 * scale,
-                        height: 500 * scale,
-                        child: Opacity(
-                          opacity: 1,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12 * scale),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaX: 60 * scale,
-                                sigmaY: 60 * scale,
-                              ),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(101, 218, 255, 0.05),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Header TopAppBar
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: headerH,
-                        child: IgnorePointer(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: 450 * scale,
+                height: 450 * scale,
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(178, 197, 255, 0.04),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24 * scale,
+                    vertical: 24 * scale,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight - (48 * scale),
+                    ),
+                    child: Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16 * scale),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                           child: Container(
+                            constraints: const BoxConstraints(maxWidth: 420),
                             decoration: BoxDecoration(
-                              color: const Color.fromRGBO(16, 19, 27, 0.8),
-                              border: const Border(
-                                bottom: BorderSide(
-                                  color: Color.fromRGBO(66, 70, 85, 0.3),
-                                  width: 1,
-                                ),
+                              color: const Color(0x0D161B22),
+                              borderRadius: BorderRadius.circular(16 * scale),
+                              border: Border.all(
+                                color: const Color.fromRGBO(140, 144, 161, 0.15),
+                                width: 1.2,
                               ),
-                            ),
-                            child: Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: ClipRect(
-                                    child: BackdropFilter(
-                                      filter: ImageFilter.blur(
-                                        sigmaX: 6 * scale,
-                                        sigmaY: 6 * scale,
-                                      ),
-                                      child: const SizedBox.expand(),
-                                    ),
-                                  ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  blurRadius: 40 * scale,
+                                  offset: Offset(0, 20 * scale),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 24 * scale),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(24 * scale),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
                                     children: [
                                       Container(
                                         width: 20 * scale,
@@ -126,6 +81,7 @@ class VerificationSuccessScreen extends StatelessWidget {
                                               BorderRadius.circular(4 * scale),
                                         ),
                                       ),
+                                      SizedBox(width: 12 * scale),
                                       Text(
                                         'EmSafe',
                                         style: TextStyle(
@@ -137,88 +93,48 @@ class VerificationSuccessScreen extends StatelessWidget {
                                           color: const Color(0xFFB2C5FF),
                                         ),
                                       ),
-                                      Container(
-                                        width: 20 * scale,
-                                        height: 16 * scale,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFB2C5FF),
-                                          borderRadius:
-                                              BorderRadius.circular(4 * scale),
-                                        ),
-                                      ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                                  SizedBox(height: 28 * scale),
 
-                      // Main
-                      Positioned.fill(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: mainTopPad),
-                          child: Stack(
-                            children: [
-                              // Central visual container (approx)
-                              Align(
-                                alignment: Alignment.topCenter,
-                                child: SizedBox(
-                                  width: 394 * scale,
-                                  height: 522 * scale,
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Positioned(
-                                        top: 258 * scale,
-                                        left: 19.19 * scale,
-                                        right: 19.19 * scale,
-                                        child: Text(
+                                  Center(
+                                    child: Column(
+                                      children: [
+                                        Text(
                                           'Verification Success',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontFamily: 'Sora',
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 40 * scale,
-                                            height: 48 / 40,
+                                            fontSize: 28 * scale,
+                                            height: 1.2,
                                             letterSpacing: -0.8 * scale,
                                             color: const Color(0xFFE1E2EE),
                                           ),
                                         ),
-                                      ),
-                                      Positioned(
-                                        top: 322 * scale,
-                                        left: 0,
-                                        right: 0,
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(horizontal: 2.31 * scale),
-                                          child: Text(
-                                            "You’re all set. Going to dashboard…",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 18 * scale,
-                                              height: 28 / 18,
-                                              color: const Color(0xFFC2C6D8),
-                                            ),
+                                        SizedBox(height: 12 * scale),
+                                        Text(
+                                          "You’re all set. Going to dashboard…",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16 * scale,
+                                            height: 1.5,
+                                            color: const Color(0xFFC2C6D8),
                                           ),
                                         ),
-                                      ),
-                                      Positioned(
-                                        top: 426 * scale,
-                                        left: 0,
-                                        right: 0,
-                                        child: SizedBox(
-                                          height: 64 * scale,
-                                          width: 394 * scale,
+                                        SizedBox(height: 24 * scale),
+
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 56 * scale,
                                           child: DecoratedBox(
                                             decoration: BoxDecoration(
                                               color: const Color(0xFF00C0E9),
                                               borderRadius:
-                                                  BorderRadius.circular(8 * scale),
+                                                  BorderRadius.circular(
+                                                      8 * scale),
                                             ),
                                             child: TextButton(
                                               onPressed: () {
@@ -227,10 +143,10 @@ class VerificationSuccessScreen extends StatelessWidget {
                                                 );
                                               },
                                               style: TextButton.styleFrom(
-                                                padding: EdgeInsets.zero,
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(8 * scale),
+                                                      BorderRadius.circular(
+                                                          8 * scale),
                                                 ),
                                               ),
                                               child: Text(
@@ -238,173 +154,110 @@ class VerificationSuccessScreen extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontFamily: 'Sora',
                                                   fontWeight: FontWeight.w500,
-                                                  fontSize: 24 * scale,
-                                                  height: 32 / 24,
+                                                  fontSize: 20 * scale,
                                                   color: const Color(0xFF004A5B),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Positioned(
-                                        top: (426 * scale) + 64 * scale,
-                                        left: 0,
-                                        right: 0,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 8 * scale,
-                                              height: 8 * scale,
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFF65DAFF),
-                                                borderRadius:
-                                                    BorderRadius.circular(12 * scale),
-                                              ),
-                                            ),
-                                            SizedBox(width: 8 * scale),
-                                            Text(
-                                              'Verified',
-                                              style: TextStyle(
-                                                fontFamily: 'JetBrains Mono',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 12 * scale,
-                                                height: 16 / 12,
-                                                color: const Color(0xFF8C90A1),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
 
-                                      // Success badge & icon (approx)
-                                      Positioned(
-                                        top: 0,
-                                        left: 66 * scale,
-                                        child: SizedBox(
-                                          width: 226 * scale,
-                                          height: 226 * scale,
-                                          child: Stack(
-                                            clipBehavior: Clip.none,
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(32 * scale),
-                                                child: BackdropFilter(
-                                                  filter: ImageFilter.blur(
-                                                    sigmaX: 10 * scale,
-                                                    sigmaY: 10 * scale,
-                                                  ),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          const Color.fromRGBO(22, 27, 34, 0.7),
-                                                      borderRadius:
-                                                          BorderRadius.circular(32 * scale),
-                                                      border: Border.all(
-                                                        color: const Color(0xFF21262D),
-                                                        width: 1,
-                                                      ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding: EdgeInsets.all(48 * scale),
-                                                      child: Column(
-                                                        children: [
-                                                          SizedBox(width: double.infinity),
-                                                          Container(
-                                                            width: 66.67 * scale,
-                                                            height: 66.67 * scale,
-                                                            decoration: BoxDecoration(
-                                                              color: const Color(0xFF65DAFF),
-                                                              borderRadius:
-                                                                  BorderRadius.circular(
-                                                                12 * scale,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                right: -15 * scale,
-                                                top: -15 * scale,
-                                                child: Container(
-                                                  width: 29.33 * scale,
-                                                  height: 32.67 * scale,
-                                                  decoration: BoxDecoration(
-                                                    color: const Color(0xFF00C0E9),
-                                                    borderRadius:
-                                                        BorderRadius.circular(12 * scale),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                        SizedBox(height: 16 * scale),
 
-                                      // Bento-lite cards
-                                      Positioned(
-                                        top: 122 * scale,
-                                        left: 24 * scale,
-                                        right: 24 * scale,
-                                        child: _BentoLite(scale: scale),
-                                      ),
-                                      Positioned(
-                                        top: 244 * scale,
-                                        left: 24 * scale,
-                                        right: 24 * scale,
-                                        child: _BentoLite2(scale: scale),
-                                      ),
-                                    ],
+                                        const _VerifiedTag(),
+
+                                        SizedBox(height: 20 * scale),
+
+                                        const _BentoLite(
+                                          label: 'PROTOCOL',
+                                          valueKey: 'Session ID',
+                                          valueMain: 'B2C5',
+                                          color: Color(0xFF65DAFF),
+                                        ),
+                                        SizedBox(height: 12 * scale),
+                                        const _BentoLite2(
+                                          label: 'STATUS',
+                                          valueMain: 'OK',
+                                          accent: Color(0xFFB2C5FF),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-
-                              // Bottom separation
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  width: 426 * scale,
-                                  height: 80 * scale,
-                                  color: Colors.transparent,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
 }
 
-class _BentoLite extends StatelessWidget {
-  const _BentoLite({required this.scale});
-  final double scale;
+class _VerifiedTag extends StatelessWidget {
+  const _VerifiedTag();
 
   @override
   Widget build(BuildContext context) {
+    final scale = (MediaQuery.sizeOf(context).width / 390)
+        .clamp(0.85, 1.15);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 8 * scale,
+          height: 8 * scale,
+          decoration: BoxDecoration(
+            color: const Color(0xFF65DAFF),
+            borderRadius: BorderRadius.circular(12 * scale),
+          ),
+        ),
+        SizedBox(width: 8 * scale),
+        Text(
+          'Verified',
+          style: TextStyle(
+            fontFamily: 'JetBrains Mono',
+            fontWeight: FontWeight.w500,
+            fontSize: 12 * scale,
+            height: 16 / 12,
+            color: const Color(0xFF8C90A1),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BentoLite extends StatelessWidget {
+  const _BentoLite({
+    required this.label,
+    required this.valueKey,
+    required this.valueMain,
+    required this.color,
+  });
+
+  final String label;
+  final String valueKey;
+  final String valueMain;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final scale = (MediaQuery.sizeOf(context).width / 390)
+        .clamp(0.85, 1.15);
     return ClipRRect(
       borderRadius: BorderRadius.circular(8 * scale),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10 * scale, sigmaY: 10 * scale),
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          height: 106 * scale,
+          height: 112 * scale,
           decoration: BoxDecoration(
             color: const Color.fromRGBO(22, 27, 34, 0.7),
             borderRadius: BorderRadius.circular(8 * scale),
@@ -414,17 +267,16 @@ class _BentoLite extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.all(24 * scale),
+            padding: EdgeInsets.all(20 * scale),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'PROTOCOL',
+                  label,
                   style: TextStyle(
                     fontFamily: 'JetBrains Mono',
                     fontWeight: FontWeight.w500,
                     fontSize: 12 * scale,
-                    height: 16 / 12,
                     letterSpacing: 1.2 * scale,
                     color: const Color(0xFF8C90A1),
                   ),
@@ -434,12 +286,11 @@ class _BentoLite extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Session ID',
+                      valueKey,
                       style: TextStyle(
                         fontFamily: 'JetBrains Mono',
                         fontWeight: FontWeight.w500,
                         fontSize: 12 * scale,
-                        height: 16 / 12,
                         letterSpacing: 1.2 * scale,
                         color: const Color(0xFF8C90A1),
                       ),
@@ -449,16 +300,15 @@ class _BentoLite extends StatelessWidget {
                         Container(
                           width: 16 * scale,
                           height: 21 * scale,
-                          color: const Color(0xFF65DAFF),
+                          color: color,
                         ),
                         SizedBox(width: 4 * scale),
                         Text(
-                          'B2C5',
+                          valueMain,
                           style: TextStyle(
                             fontFamily: 'JetBrains Mono',
                             fontWeight: FontWeight.w500,
                             fontSize: 24 * scale,
-                            height: 32 / 24,
                             color: const Color(0xFFB2C5FF),
                           ),
                         ),
@@ -476,17 +326,26 @@ class _BentoLite extends StatelessWidget {
 }
 
 class _BentoLite2 extends StatelessWidget {
-  const _BentoLite2({required this.scale});
-  final double scale;
+  const _BentoLite2({
+    required this.label,
+    required this.valueMain,
+    required this.accent,
+  });
+
+  final String label;
+  final String valueMain;
+  final Color accent;
 
   @override
   Widget build(BuildContext context) {
+    final scale = (MediaQuery.sizeOf(context).width / 390)
+        .clamp(0.85, 1.15);
     return ClipRRect(
       borderRadius: BorderRadius.circular(8 * scale),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10 * scale, sigmaY: 10 * scale),
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          height: 106 * scale,
+          height: 112 * scale,
           decoration: BoxDecoration(
             color: const Color.fromRGBO(22, 27, 34, 0.7),
             borderRadius: BorderRadius.circular(8 * scale),
@@ -496,41 +355,29 @@ class _BentoLite2 extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.all(24 * scale),
+            padding: EdgeInsets.all(20 * scale),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'STATUS',
+                  label,
                   style: TextStyle(
                     fontFamily: 'JetBrains Mono',
                     fontWeight: FontWeight.w500,
                     fontSize: 12 * scale,
-                    height: 16 / 12,
                     letterSpacing: 1.2 * scale,
                     color: const Color(0xFF8C90A1),
                   ),
                 ),
-                SizedBox(height: 8 * scale),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'OK',
-                      style: TextStyle(
-                        fontFamily: 'JetBrains Mono',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 24 * scale,
-                        height: 32 / 24,
-                        color: const Color(0xFFB2C5FF),
-                      ),
-                    ),
-                    Container(
-                      width: 16 * scale,
-                      height: 21 * scale,
-                      color: const Color(0xFF65DAFF),
-                    ),
-                  ],
+                SizedBox(height: 10 * scale),
+                Text(
+                  valueMain,
+                  style: TextStyle(
+                    fontFamily: 'JetBrains Mono',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 26 * scale,
+                    color: accent,
+                  ),
                 ),
               ],
             ),
