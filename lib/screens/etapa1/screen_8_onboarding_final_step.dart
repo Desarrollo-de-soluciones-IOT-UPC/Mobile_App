@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
+import '../../routes/etapa2_routes.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/onboarding_page_solid.dart';
 
@@ -66,11 +67,14 @@ class OnboardingFinalStepScreen extends StatelessWidget {
           height: 56,
           child: FilledButton(
             onPressed: () {
+              // Al finalizar Etapa 1, iniciar Etapa 2 en el orden correcto:
+              // Create Account -> Login.
               Navigator.of(context).pushNamedAndRemoveUntil(
-                AppRoutes.splash1,
+                Etapa2Routes.createAccount,
                 (route) => false,
               );
             },
+
             style: FilledButton.styleFrom(
               backgroundColor: AppTheme.primaryBlue,
               shape: RoundedRectangleBorder(
