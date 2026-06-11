@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
+import '../../routes/etapa2_routes.dart';
 import '../../theme/app_theme.dart';
 
 class SplashOfficialBrandScreen extends StatelessWidget {
@@ -27,24 +30,28 @@ class _SplashContentState extends State<_SplashContent>
   late final Animation<double> _logoScale;
   late final Animation<double> _textOpacity;
 
+  bool _hasNavigated = false;
+  Timer? _autoNavTimer;
+
   @override
   void initState() {
     super.initState();
     _setupAnimations();
 
-    // Auto navegación (por ahora, mantiene comportamiento actual)
-    Future.delayed(const Duration(seconds: 4), () {
-      if (!mounted) return;
+    // Auto navegación: se cancela si el usuario toca el footer.
+    _autoNavTimer = Timer(const Duration(seconds: 4), () {
+      if (!mounted || _hasNavigated) return;
+      _hasNavigated = true;
       Navigator.of(context).pushReplacementNamed(AppRoutes.splashUpdated);
     });
   }
 
   void _skipOnboardingAndGoToStage2() {
-    Navigator.of(context).pushNamed('/etapa2/login');
+    if (!mounted || _hasNavigated) return;
+    _hasNavigated = true;
+    _autoNavTimer?.cancel();
+    Navigator.of(context).pushNamed(Etapa2Routes.login);
   }
-
-
-
 
   void _setupAnimations() {
     _logoController = AnimationController(
@@ -61,9 +68,10 @@ class _SplashContentState extends State<_SplashContent>
       vsync: this,
     );
 
-    _textOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _textController, curve: Curves.easeIn),
-    );
+    _textOpacity = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _textController, curve: Curves.easeIn));
 
     _connectionController = AnimationController(
       duration: const Duration(milliseconds: 1500),
@@ -80,6 +88,7 @@ class _SplashContentState extends State<_SplashContent>
 
   @override
   void dispose() {
+    _autoNavTimer?.cancel();
     _logoController.dispose();
     _textController.dispose();
     _connectionController.dispose();
@@ -95,10 +104,7 @@ class _SplashContentState extends State<_SplashContent>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              AppTheme.darkNavy,
-              const Color(0xFF101C2E),
-            ],
+            colors: [AppTheme.darkNavy, const Color(0xFF101C2E)],
           ),
         ),
         child: SafeArea(
@@ -138,7 +144,9 @@ class _SplashContentState extends State<_SplashContent>
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(32),
                               border: Border.all(
-                                color: AppTheme.primaryCyan.withValues(alpha: 0.35),
+                                color: AppTheme.primaryCyan.withValues(
+                                  alpha: 0.35,
+                                ),
                                 width: 1.5,
                               ),
                             ),
@@ -220,7 +228,9 @@ class _SplashContentState extends State<_SplashContent>
                               color: AppTheme.darkBg.withValues(alpha: 0.92),
                               borderRadius: BorderRadius.circular(18),
                               border: Border.all(
-                                color: AppTheme.primaryBlue.withValues(alpha: 0.18),
+                                color: AppTheme.primaryBlue.withValues(
+                                  alpha: 0.18,
+                                ),
                               ),
                             ),
                             child: Row(
@@ -249,18 +259,40 @@ class _SplashContentState extends State<_SplashContent>
                           ),
                         ),
                         const SizedBox(height: 18),
-                        GestureDetector(
-                          onTap: _skipOnboardingAndGoToStage2,
-                          child: Text(
-                            'Skip onboarding / Sign in',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppTheme.primaryBlue.withValues(alpha: 0.95),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.2,
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                'Already have an account? ',
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             ),
-                          ),
+                            TextButton(
+                              onPressed: _skipOnboardingAndGoToStage2,
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppTheme.primaryCyan,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                visualDensity: VisualDensity.compact,
+                                textStyle: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              child: const Text('Sign In'),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -274,7 +306,3 @@ class _SplashContentState extends State<_SplashContent>
     );
   }
 }
-
-
-
-

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
+import '../../routes/etapa2_routes.dart';
 import '../../theme/app_theme.dart';
 
 class SplashEmSafeUpdatedScreen extends StatelessWidget {
@@ -27,8 +28,10 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
     final double rightPad = (24 * scale).clamp(16, 28);
     final double topPad = (57 * scale).clamp(32, 90);
 
-    final double pageWidth = (bentoWidth + 2 * 24 * scale)
-        .clamp(320, size.width - 24 * 2);
+    final double pageWidth = (bentoWidth + 2 * 24 * scale).clamp(
+      320,
+      size.width - 24 * 2,
+    );
 
     return Scaffold(
       backgroundColor: AppTheme.darkNavy,
@@ -40,9 +43,7 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 const DecoratedBox(
-                  decoration: BoxDecoration(
-                  color: AppTheme.darkNavy,
-                  ),
+                  decoration: BoxDecoration(color: AppTheme.darkNavy),
                 ),
                 Column(
                   children: [
@@ -93,7 +94,10 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
                                           text: 'radiation',
                                           style: TextStyle(
                                             color: const Color(0xFFB2C5FF),
-                                            fontSize: (30 * scale).clamp(22, 36),
+                                            fontSize: (30 * scale).clamp(
+                                              22,
+                                              36,
+                                            ),
                                             fontWeight: FontWeight.w700,
                                           ),
                                         ),
@@ -101,7 +105,10 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
                                           text: ' in real time.',
                                           style: TextStyle(
                                             color: const Color(0xFFE1E2EE),
-                                            fontSize: (30 * scale).clamp(22, 36),
+                                            fontSize: (30 * scale).clamp(
+                                              22,
+                                              36,
+                                            ),
                                             fontWeight: FontWeight.w700,
                                           ),
                                         ),
@@ -175,21 +182,57 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
                                 foregroundColor: const Color(0xFF002B73),
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12 * scale),
+                                  borderRadius: BorderRadius.circular(
+                                    12 * scale,
+                                  ),
                                 ),
                               ),
                               child: const Text('Next'),
                             ),
                           ),
                           SizedBox(height: (12 * scale).clamp(8, 16)),
-                          Text(
-                            'Already have an account?\nSign In',
-                            style: TextStyle(
-                              color: const Color(0xFFC2C6D8),
-                              fontSize: (16 * scale).clamp(14, 18),
-                              height: 1.2,
-                              fontWeight: FontWeight.w400,
-                            ),
+                          Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                ),
+                                child: Text(
+                                  'Already have an account? ',
+                                  style: TextStyle(
+                                    color: const Color(0xFFC2C6D8),
+                                    fontSize: (16 * scale).clamp(14, 18),
+                                    height: 1.2,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed(Etapa2Routes.login);
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: const Color(0xFFB2C5FF),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 0,
+                                    vertical: 8,
+                                  ),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity.compact,
+                                  textStyle: TextStyle(
+                                    fontSize: (16 * scale).clamp(14, 18),
+                                    height: 1.2,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                child: const Text('Sign In'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -213,12 +256,7 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
         color: active ? const Color(0xFFB2C5FF) : const Color(0xFF32343E),
         borderRadius: BorderRadius.circular(12 * scale),
         boxShadow: active
-            ? const [
-                BoxShadow(
-                  color: Color(0x66B2C5FF),
-                  blurRadius: 8,
-                ),
-              ]
+            ? const [BoxShadow(color: Color(0x66B2C5FF), blurRadius: 8)]
             : null,
       ),
     );
@@ -238,12 +276,7 @@ class _Header extends StatelessWidget {
       ),
       decoration: const BoxDecoration(
         color: Color(0x8010131B),
-        border: Border(
-          bottom: BorderSide(
-            color: Color(0x33424655),
-            width: 1,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: Color(0x33424655), width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -275,14 +308,11 @@ class _Header extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(
-                AppRoutes.onboardingSmartAlerts,
-              );
+              Navigator.of(
+                context,
+              ).pushReplacementNamed(AppRoutes.onboardingSmartAlerts);
             },
-            child: const Text(
-              'Skip',
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text('Skip', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -296,7 +326,6 @@ class _BentoCard extends StatelessWidget {
   final double scale;
 
   const _BentoCard({
-    super.key,
     required this.width,
     required this.height,
     required this.scale,
@@ -311,9 +340,7 @@ class _BentoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color.fromRGBO(25, 27, 36, 0.6),
         borderRadius: BorderRadius.circular(8 * scale),
-        border: Border.all(
-          color: const Color.fromRGBO(178, 197, 255, 0.1),
-        ),
+        border: Border.all(color: const Color.fromRGBO(178, 197, 255, 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,9 +434,7 @@ class _BentoCard extends StatelessWidget {
                 child: FractionallySizedBox(
                   widthFactor: 0.5,
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF2EA043),
-                    ),
+                    decoration: const BoxDecoration(color: Color(0xFF2EA043)),
                   ),
                 ),
               ),
@@ -442,4 +467,3 @@ class _BentoCard extends StatelessWidget {
     );
   }
 }
-
