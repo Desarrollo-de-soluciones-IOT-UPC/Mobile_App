@@ -34,16 +34,15 @@ class _SplashContentState extends State<_SplashContent>
 
     // Auto navegación (por ahora, mantiene comportamiento actual)
     Future.delayed(const Duration(seconds: 4), () {
-      if (mounted) {
-                        Navigator.of(context).pushReplacementNamed(AppRoutes.splashUpdated);
-      }
+      if (!mounted) return;
+      Navigator.of(context).pushReplacementNamed(AppRoutes.splashUpdated);
     });
   }
 
   void _skipOnboardingAndGoToStage2() {
-    // Para omitir onboarding, conectamos directo al flujo de login (etapa2)
-    Navigator.of(context).pushReplacementNamed('/etapa2/login');
+    Navigator.of(context).pushNamed('/etapa2/login');
   }
+
 
 
 
@@ -246,6 +245,20 @@ class _SplashContentState extends State<_SplashContent>
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        GestureDetector(
+                          onTap: _skipOnboardingAndGoToStage2,
+                          child: Text(
+                            'Skip onboarding / Sign in',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppTheme.primaryBlue.withValues(alpha: 0.95),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.2,
                             ),
                           ),
                         ),
