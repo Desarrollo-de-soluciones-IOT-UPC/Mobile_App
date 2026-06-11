@@ -129,9 +129,9 @@ class VerificationSuccessScreen extends StatelessWidget {
                                         SizedBox(
                                           width: double.infinity,
                                           height: 56 * scale,
-                                          child: DecoratedBox(
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF00C0E9),
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF00C0E9),
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       8 * scale),

@@ -31,12 +31,21 @@ class _SplashContentState extends State<_SplashContent>
   void initState() {
     super.initState();
     _setupAnimations();
+
+    // Auto navegación (por ahora, mantiene comportamiento actual)
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed(AppRoutes.splashUpdated);
+                        Navigator.of(context).pushReplacementNamed(AppRoutes.splashUpdated);
       }
     });
   }
+
+  void _skipOnboardingAndGoToStage2() {
+    // Para omitir onboarding, conectamos directo al flujo de login (etapa2)
+    Navigator.of(context).pushReplacementNamed('/etapa2/login');
+  }
+
+
 
   void _setupAnimations() {
     _logoController = AnimationController(

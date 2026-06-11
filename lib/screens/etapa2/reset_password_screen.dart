@@ -110,14 +110,16 @@ class ResetPasswordScreen extends StatelessWidget {
                                     size: 20 * scale,
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(6 * scale),
+                                    borderRadius:
+                                        BorderRadius.circular(6 * scale),
                                     borderSide: const BorderSide(
                                       color: Color.fromRGBO(66, 70, 85, 0.5),
                                       width: 1,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(6 * scale),
+                                    borderRadius:
+                                        BorderRadius.circular(6 * scale),
                                     borderSide: const BorderSide(
                                       color: Color(0xFF5B8CFF),
                                       width: 1.2,
@@ -151,15 +153,18 @@ class ResetPasswordScreen extends StatelessWidget {
                                 height: 56 * scale,
                                 child: ElevatedButton(
                                   onPressed: () {
+                                    // Reset Password -> Login
                                     Navigator.of(context).pushNamed(
-                                        '/etapa2/verification-success');
+                                      '/etapa2/login',
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF5B8CFF),
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(8 * scale),
+                                      borderRadius: BorderRadius.circular(
+                                        8 * scale,
+                                      ),
                                     ),
                                   ),
                                   child: Text(

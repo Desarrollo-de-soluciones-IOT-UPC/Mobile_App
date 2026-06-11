@@ -123,7 +123,7 @@ class LoginScreen extends StatelessWidget {
                                       child: ElevatedButton(
                                         onPressed: () {
                                           Navigator.of(context).pushNamed(
-                                              '/etapa2/verify-identity');
+                                          '/etapa2/verify-identity');
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: const Color(0xFF5B8CFF),

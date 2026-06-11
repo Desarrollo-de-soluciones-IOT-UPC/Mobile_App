@@ -294,8 +294,10 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                                   height: 56 * scale,
                                   child: TextButton(
                                     onPressed: () {
+                                      // Face ID -> Going to dashboard (etapa 2)
                                       Navigator.of(context).pushNamed(
-                                          '/etapa2/verify-identity');
+                                        '/etapa2/going-to-dashboard',
+                                      );
                                     },
                                     style: TextButton.styleFrom(
                                       backgroundColor: const Color(0xFFB2C5FF),

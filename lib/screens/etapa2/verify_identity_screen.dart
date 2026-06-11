@@ -1,11 +1,36 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Verify Identity (Etapa 2)
-/// Responsive + compacto y sin alturas rígidas.
-class VerifyIdentityScreen extends StatelessWidget {
+/// OTP editable con input real (6 boxes visuales) corregido y funcional
+class VerifyIdentityScreen extends StatefulWidget {
   const VerifyIdentityScreen({super.key});
+
+  @override
+  State<VerifyIdentityScreen> createState() => _VerifyIdentityScreenState();
+}
+
+class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
+  final _otpController = TextEditingController();
+  final _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    // Opcional: Abre el teclado automáticamente al entrar a la pantalla
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _otpController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,8 +148,7 @@ class VerifyIdentityScreen extends StatelessWidget {
                                               width: 1,
                                             ),
                                             borderRadius:
-                                                BorderRadius.circular(
-                                                    12 * scale),
+                                                BorderRadius.circular(12 * scale),
                                           ),
                                           child: Center(
                                             child: Container(
@@ -167,7 +191,7 @@ class VerifyIdentityScreen extends StatelessWidget {
 
                                   SizedBox(height: 20 * scale),
 
-                                  // OTP boxes
+                                  // OTP editable boxes
                                   Center(
                                     child: LayoutBuilder(
                                       builder: (context, constraints) {
@@ -178,20 +202,75 @@ class VerifyIdentityScreen extends StatelessWidget {
                                           24 * scale,
                                           56 * scale,
                                         );
-                                        return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: List.generate(6, (i) {
-                                            final bool active = i == 1;
-                                            return SizedBox(
-                                              width: s,
-                                              height: s,
-                                              child: _OtpBox(
-                                                active: active,
-                                                scale: scale,
+
+                                        final otp = _otpController.text;
+
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            // Input oculto corregido
+                                            SizedBox(
+                                              width: 1,
+                                              height: 1,
+                                              child: TextField(
+                                                controller: _otpController,
+                                                focusNode: _focusNode, // <- ASIGNADO AQUÍ
+                                                keyboardType: TextInputType.number,
+                                                maxLength: 6,
+                                                autofocus: false,
+                                                enableSuggestions: false,
+                                                autocorrect: false,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter.digitsOnly, // <- Seguridad extra
+                                                ],
+                                                onChanged: (v) {
+                                                  setState(() {});
+                                                },
+                                                style: const TextStyle(
+                                                    fontSize: 1, 
+                                                    color: Colors.transparent,
+                                                ),
+                                                decoration: const InputDecoration(
+                                                  border: InputBorder.none,
+                                                  counterText: '', // Oculta el contador por defecto de maxLength
+                                                ),
                                               ),
-                                            );
-                                          }),
+                                            ),
+
+                                            GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
+                                              onTap: () {
+                                                // Abre el teclado de forma efectiva al presionar los cuadros
+                                                _focusNode.requestFocus();
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
+                                                children: List.generate(6, (i) {
+                                                  final char = (i < otp.length)
+                                                      ? otp[i]
+                                                      : '';
+                                                  
+                                                  // El cuadro está activo si es la posición actual del cursor
+                                                  // O si ya se llenaron los 6, se puede marcar el último o ninguno.
+                                                  final bool active = _focusNode.hasFocus && (
+                                                      (i == otp.length) || 
+                                                      (i == 5 && otp.length == 6)
+                                                  );
+
+                                                  return SizedBox(
+                                                    width: s,
+                                                    height: s,
+                                                    child: _OtpBox(
+                                                      active: active,
+                                                      scale: scale,
+                                                      value: char,
+                                                    ),
+                                                  );
+                                                }),
+                                              ),
+                                            ),
+                                          ],
                                         );
                                       },
                                     ),
@@ -211,12 +290,10 @@ class VerifyIdentityScreen extends StatelessWidget {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         elevation: 0,
-                                        backgroundColor:
-                                            const Color(0xFF5B8CFF),
+                                        backgroundColor: const Color(0xFF5B8CFF),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(
-                                                  12 * scale),
+                                              BorderRadius.circular(12 * scale),
                                         ),
                                       ),
                                       child: Text(
@@ -279,10 +356,15 @@ class VerifyIdentityScreen extends StatelessWidget {
 }
 
 class _OtpBox extends StatelessWidget {
-  const _OtpBox({required this.active, required this.scale});
+  const _OtpBox({
+    required this.active,
+    required this.scale,
+    required this.value,
+  });
 
   final bool active;
   final double scale;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
@@ -294,13 +376,13 @@ class _OtpBox extends StatelessWidget {
           color: active
               ? const Color(0xFF2563EB)
               : const Color.fromRGBO(66, 70, 85, 0.4),
-          width: 1,
+          width: active ? 1.5 : 1, // Un borde ligeramente más grueso resalta la selección activa
         ),
         boxShadow: active
             ? [
                 BoxShadow(
-                  color: const Color(0xFF2563EB),
-                  blurRadius: 0,
+                  color: const Color(0xFF2563EB).withOpacity(0.3),
+                  blurRadius: 4 * scale,
                   spreadRadius: 1,
                 ),
               ]
@@ -308,7 +390,7 @@ class _OtpBox extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          '',
+          value,
           style: TextStyle(
             fontFamily: 'JetBrains Mono',
             fontWeight: FontWeight.w500,
@@ -321,4 +403,3 @@ class _OtpBox extends StatelessWidget {
     );
   }
 }
-
