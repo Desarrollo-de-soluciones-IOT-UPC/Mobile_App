@@ -20,6 +20,38 @@ class HomeProfileSetupScreen extends StatelessWidget {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
       showBrandHeader: false,
+      footer: Padding(
+        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildProgressBar(activeIndex: 2, scale: scale),
+            SizedBox(height: (22 * scale).clamp(16, 32)),
+            SizedBox(
+              width: double.infinity,
+              height: (56 * scale).clamp(46, 70),
+              child: FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.pairingSensors);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16 * scale),
+                  ),
+                ),
+                child: Text(
+                  'Next →',
+                  style: TextStyle(
+                    fontSize: (16 * scale).clamp(14, 18),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Column(
@@ -56,38 +88,6 @@ class HomeProfileSetupScreen extends StatelessWidget {
           ],
         ),
       ),
-      footer: Padding(
-        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildProgressBar(activeIndex: 2, scale: scale),
-            SizedBox(height: (22 * scale).clamp(16, 32)),
-            SizedBox(
-              width: double.infinity,
-              height: (56 * scale).clamp(46, 70),
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.pairingSensors);
-                },
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16 * scale),
-                  ),
-                ),
-                child: Text(
-                  'Next →',
-                  style: TextStyle(
-                    fontSize: (16 * scale).clamp(14, 18),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -116,7 +116,11 @@ class HomeProfileSetupScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: (18 * scale).clamp(12, 26)),
-          _buildField(scale: scale, label: 'Street Address', value: '123 Guardian Way'),
+          _buildField(
+            scale: scale,
+            label: 'Street Address',
+            value: '123 Guardian Way',
+          ),
           SizedBox(height: (14 * scale).clamp(10, 22)),
           Row(
             children: [
@@ -188,8 +192,11 @@ class HomeProfileSetupScreen extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.location_pin,
-                color: AppTheme.primaryCyan, size: (14 * scale).clamp(10, 20)),
+            Icon(
+              Icons.location_pin,
+              color: AppTheme.primaryCyan,
+              size: (14 * scale).clamp(10, 20),
+            ),
             SizedBox(width: (8 * scale).clamp(4, 12)),
             Text(
               'Signal Locked',
@@ -343,4 +350,3 @@ class HomeProfileSetupScreen extends StatelessWidget {
     );
   }
 }
-

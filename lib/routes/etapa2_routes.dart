@@ -18,13 +18,12 @@ class Etapa2Routes {
   static const String goingToDashboard = '/etapa2/going-to-dashboard';
 
   static Map<String, WidgetBuilder> get routes => {
-        createAccount: (context) => const CreateAccountScreen(),
-        login: (context) => const LoginScreen(),
-        resetPassword: (context) => const ResetPasswordScreen(),
-        verifyIdentity: (context) => const VerifyIdentityScreen(),
-        verificationSuccess: (context) => const VerificationSuccessScreen(),
-        faceIdAuthentication: (context) => const FaceIdAuthenticationScreen(),
-        goingToDashboard: (context) => const GoingToDashboardScreen(),
-      };
+    createAccount: (context) => const CreateAccountScreen(),
+    login: (context) => const LoginScreen(),
+    resetPassword: (context) => const ResetPasswordScreen(),
+    verifyIdentity: (context) => const VerifyIdentityScreen(),
+    verificationSuccess: (context) => const VerificationSuccessScreen(),
+    faceIdAuthentication: (context) => const FaceIdAuthenticationScreen(),
+    goingToDashboard: (context) => const GoingToDashboardScreen(),
+  };
 }
-

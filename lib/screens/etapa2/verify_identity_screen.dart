@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../routes/etapa2_routes.dart';
+
 /// Verify Identity (Etapa 2)
 /// OTP editable con input real (6 boxes visuales) corregido y funcional
 class VerifyIdentityScreen extends StatefulWidget {
@@ -78,12 +80,17 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                               color: const Color(0x0D161B22),
                               borderRadius: BorderRadius.circular(16 * scale),
                               border: Border.all(
-                                color: const Color.fromRGBO(140, 144, 161, 0.15),
+                                color: const Color.fromRGBO(
+                                  140,
+                                  144,
+                                  161,
+                                  0.15,
+                                ),
                                 width: 1.2,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.4),
+                                  color: Colors.black.withValues(alpha: 0.4),
                                   blurRadius: 40 * scale,
                                   offset: Offset(0, 20 * scale),
                                 ),
@@ -103,16 +110,18 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                                         height: 32 * scale,
                                         padding: EdgeInsets.all(8 * scale),
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12 * scale),
+                                          borderRadius: BorderRadius.circular(
+                                            12 * scale,
+                                          ),
                                         ),
                                         child: Container(
                                           width: 16 * scale,
                                           height: 16 * scale,
                                           decoration: BoxDecoration(
                                             color: const Color(0xFFB2C5FF),
-                                            borderRadius:
-                                                BorderRadius.circular(3 * scale),
+                                            borderRadius: BorderRadius.circular(
+                                              3 * scale,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -141,14 +150,23 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                                           height: 64 * scale,
                                           decoration: BoxDecoration(
                                             color: const Color.fromRGBO(
-                                                91, 140, 255, 0.2),
+                                              91,
+                                              140,
+                                              255,
+                                              0.2,
+                                            ),
                                             border: Border.all(
                                               color: const Color.fromRGBO(
-                                                  178, 197, 255, 0.3),
+                                                178,
+                                                197,
+                                                255,
+                                                0.3,
+                                              ),
                                               width: 1,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(12 * scale),
+                                            borderRadius: BorderRadius.circular(
+                                              12 * scale,
+                                            ),
                                           ),
                                           child: Center(
                                             child: Container(
@@ -214,25 +232,29 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                                               height: 1,
                                               child: TextField(
                                                 controller: _otpController,
-                                                focusNode: _focusNode, // <- ASIGNADO AQUÍ
-                                                keyboardType: TextInputType.number,
+                                                focusNode:
+                                                    _focusNode, // <- ASIGNADO AQUÍ
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 maxLength: 6,
                                                 autofocus: false,
                                                 enableSuggestions: false,
                                                 autocorrect: false,
                                                 inputFormatters: [
-                                                  FilteringTextInputFormatter.digitsOnly, // <- Seguridad extra
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly, // <- Seguridad extra
                                                 ],
                                                 onChanged: (v) {
                                                   setState(() {});
                                                 },
                                                 style: const TextStyle(
-                                                    fontSize: 1, 
-                                                    color: Colors.transparent,
+                                                  fontSize: 1,
+                                                  color: Colors.transparent,
                                                 ),
                                                 decoration: const InputDecoration(
                                                   border: InputBorder.none,
-                                                  counterText: '', // Oculta el contador por defecto de maxLength
+                                                  counterText:
+                                                      '', // Oculta el contador por defecto de maxLength
                                                 ),
                                               ),
                                             ),
@@ -245,18 +267,20 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                                               },
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: List.generate(6, (i) {
                                                   final char = (i < otp.length)
                                                       ? otp[i]
                                                       : '';
-                                                  
+
                                                   // El cuadro está activo si es la posición actual del cursor
                                                   // O si ya se llenaron los 6, se puede marcar el último o ninguno.
-                                                  final bool active = _focusNode.hasFocus && (
-                                                      (i == otp.length) || 
-                                                      (i == 5 && otp.length == 6)
-                                                  );
+                                                  final bool active =
+                                                      _focusNode.hasFocus &&
+                                                      ((i == otp.length) ||
+                                                          (i == 5 &&
+                                                              otp.length == 6));
 
                                                   return SizedBox(
                                                     width: s,
@@ -285,15 +309,18 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                                     child: ElevatedButton(
                                       onPressed: () {
                                         Navigator.of(context).pushNamed(
-                                          '/etapa2/verification-success',
+                                          Etapa2Routes.verificationSuccess,
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
                                         elevation: 0,
-                                        backgroundColor: const Color(0xFF5B8CFF),
+                                        backgroundColor: const Color(
+                                          0xFF5B8CFF,
+                                        ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12 * scale),
+                                          borderRadius: BorderRadius.circular(
+                                            12 * scale,
+                                          ),
                                         ),
                                       ),
                                       child: Text(
@@ -376,12 +403,14 @@ class _OtpBox extends StatelessWidget {
           color: active
               ? const Color(0xFF2563EB)
               : const Color.fromRGBO(66, 70, 85, 0.4),
-          width: active ? 1.5 : 1, // Un borde ligeramente más grueso resalta la selección activa
+          width: active
+              ? 1.5
+              : 1, // Un borde ligeramente más grueso resalta la selección activa
         ),
         boxShadow: active
             ? [
                 BoxShadow(
-                  color: const Color(0xFF2563EB).withOpacity(0.3),
+                  color: const Color(0xFF2563EB).withValues(alpha: 0.3),
                   blurRadius: 4 * scale,
                   spreadRadius: 1,
                 ),

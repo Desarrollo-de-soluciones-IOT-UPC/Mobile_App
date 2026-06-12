@@ -21,6 +21,40 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
       showBrandHeader: false,
+      footer: Padding(
+        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildProgressBar(activeIndex: 1, scale: scale),
+            SizedBox(height: (22 * scale).clamp(16, 30)),
+            SizedBox(
+              width: double.infinity,
+              height: (56 * scale).clamp(46, 70),
+              child: FilledButton(
+                onPressed: () {
+                  Navigator.of(
+                    context,
+                  ).pushNamed(AppRoutes.onboardingSmartHomeProtection);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16 * scale),
+                  ),
+                ),
+                child: Text(
+                  'Next →',
+                  style: TextStyle(
+                    fontSize: (16 * scale).clamp(14, 18),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Column(
@@ -60,40 +94,6 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-          ],
-        ),
-      ),
-      footer: Padding(
-        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildProgressBar(activeIndex: 1, scale: scale),
-            SizedBox(height: (22 * scale).clamp(16, 30)),
-            SizedBox(
-              width: double.infinity,
-              height: (56 * scale).clamp(46, 70),
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(
-                    AppRoutes.onboardingSmartHomeProtection,
-                  );
-                },
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16 * scale),
-                  ),
-                ),
-                child: Text(
-                  'Next →',
-                  style: TextStyle(
-                    fontSize: (16 * scale).clamp(14, 18),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -189,10 +189,7 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressBar({
-    required int activeIndex,
-    required double scale,
-  }) {
+  Widget _buildProgressBar({required int activeIndex, required double scale}) {
     final double activeW = (40 * scale).clamp(24, 50);
     final double inactiveW = (8 * scale).clamp(6, 16);
     final double h = (6 * scale).clamp(4, 10);
@@ -222,4 +219,3 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
     );
   }
 }
-

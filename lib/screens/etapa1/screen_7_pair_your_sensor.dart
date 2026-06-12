@@ -36,7 +36,7 @@ class PairYourSensorScreen extends StatelessWidget {
               width: (358 * scale).clamp(280, 420),
               height: (664 * scale).clamp(520, 720),
               decoration: BoxDecoration(
-color: const Color(0xFF151821).withValues(alpha: 0.45),
+                color: const Color(0xFF151821).withValues(alpha: 0.45),
                 borderRadius: BorderRadius.circular(overlayRadius),
                 border: Border.all(
                   color: AppTheme.primaryCyan.withValues(alpha: 0.2),
@@ -51,7 +51,7 @@ color: const Color(0xFF151821).withValues(alpha: 0.45),
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                         child: Container(
-                          color: Colors.black.withOpacity(0.06),
+                          color: Colors.black.withValues(alpha: 0.06),
                         ),
                       ),
                     ),
@@ -103,7 +103,10 @@ color: const Color(0xFF151821).withValues(alpha: 0.45),
       children: [
         _HeaderLeft(scale: scale),
         const Spacer(),
-        SizedBox(width: (24 * scale).clamp(18, 40), height: (24 * scale).clamp(18, 40)),
+        SizedBox(
+          width: (24 * scale).clamp(18, 40),
+          height: (24 * scale).clamp(18, 40),
+        ),
       ],
     );
   }
@@ -120,7 +123,9 @@ color: const Color(0xFF151821).withValues(alpha: 0.45),
           decoration: BoxDecoration(
             color: AppTheme.primaryCyan.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(12 * scale),
-            border: Border.all(color: AppTheme.primaryCyan.withValues(alpha: 0.28)),
+            border: Border.all(
+              color: AppTheme.primaryCyan.withValues(alpha: 0.28),
+            ),
           ),
           child: Center(
             child: Container(
@@ -129,7 +134,9 @@ color: const Color(0xFF151821).withValues(alpha: 0.45),
               decoration: BoxDecoration(
                 color: const Color(0xFF32343E),
                 borderRadius: BorderRadius.circular(16 * scale),
-                border: Border.all(color: AppTheme.primaryBlue.withValues(alpha: 0.5)),
+                border: Border.all(
+                  color: AppTheme.primaryBlue.withValues(alpha: 0.5),
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: AppTheme.primaryCyan.withValues(alpha: 0.18),
@@ -232,7 +239,7 @@ color: const Color(0xFF151821).withValues(alpha: 0.45),
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFF0F1520).withOpacity(0.65),
+        color: const Color(0xFF0F1520).withValues(alpha: 0.65),
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(
           color: AppTheme.cardBorder.withValues(alpha: 0.55),
@@ -240,7 +247,7 @@ color: const Color(0xFF151821).withValues(alpha: 0.45),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.28),
+            color: Colors.black.withValues(alpha: 0.28),
             blurRadius: (24 * scale).clamp(12, 40),
           ),
         ],
@@ -366,9 +373,7 @@ color: const Color(0xFF151821).withValues(alpha: 0.45),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16 * scale),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.12),
-          ),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
           color: Colors.transparent,
         ),
         alignment: Alignment.center,
@@ -424,4 +429,3 @@ class _HeaderLeft extends StatelessWidget {
     );
   }
 }
-

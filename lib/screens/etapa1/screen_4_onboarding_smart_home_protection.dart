@@ -19,6 +19,38 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
       showBrandHeader: false,
+      footer: Padding(
+        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildProgressBar(activeIndex: 2, scale: scale),
+            SizedBox(height: (22 * scale).clamp(16, 32)),
+            SizedBox(
+              width: double.infinity,
+              height: (56 * scale).clamp(46, 70),
+              child: FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.homeProfileSetup);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14 * scale),
+                  ),
+                ),
+                child: Text(
+                  'Get Started →',
+                  style: TextStyle(
+                    fontSize: (16 * scale).clamp(14, 18),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Column(
@@ -53,38 +85,6 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
           ],
         ),
       ),
-      footer: Padding(
-        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildProgressBar(activeIndex: 2, scale: scale),
-            SizedBox(height: (22 * scale).clamp(16, 32)),
-            SizedBox(
-              width: double.infinity,
-              height: (56 * scale).clamp(46, 70),
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.homeProfileSetup);
-                },
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14 * scale),
-                  ),
-                ),
-                child: Text(
-                  'Get Started →',
-                  style: TextStyle(
-                    fontSize: (16 * scale).clamp(14, 18),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -103,7 +103,11 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
                 Expanded(
                   flex: 4,
                   child: _bentoCard(
-                    child: Icon(Icons.tv, color: Colors.white38, size: 28 * scale),
+                    child: Icon(
+                      Icons.tv,
+                      color: Colors.white38,
+                      size: 28 * scale,
+                    ),
                   ),
                 ),
                 SizedBox(height: 10 * scale),
@@ -114,8 +118,11 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.gamepad_outlined,
-                            color: Colors.white38, size: 24 * scale),
+                        Icon(
+                          Icons.gamepad_outlined,
+                          color: Colors.white38,
+                          size: 24 * scale,
+                        ),
                         Text(
                           'MONITORED',
                           style: TextStyle(
@@ -146,8 +153,11 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
                       color: AppTheme.primaryBlue.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(16 * scale),
                     ),
-                    child: Icon(Icons.router,
-                        color: AppTheme.primaryBlue, size: 32 * scale),
+                    child: Icon(
+                      Icons.router,
+                      color: AppTheme.primaryBlue,
+                      size: 32 * scale,
+                    ),
                   ),
                   SizedBox(height: 14 * scale),
                   Container(
@@ -190,16 +200,22 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
                 Expanded(
                   flex: 4,
                   child: _bentoCard(
-                    child: Icon(Icons.videocam_outlined,
-                        color: Colors.white38, size: 24 * scale),
+                    child: Icon(
+                      Icons.videocam_outlined,
+                      color: Colors.white38,
+                      size: 24 * scale,
+                    ),
                   ),
                 ),
                 SizedBox(height: 10 * scale),
                 Expanded(
                   flex: 6,
                   child: _bentoCard(
-                    child: Icon(Icons.lightbulb_outline,
-                        color: Colors.white38, size: 24 * scale),
+                    child: Icon(
+                      Icons.lightbulb_outline,
+                      color: Colors.white38,
+                      size: 24 * scale,
+                    ),
                   ),
                 ),
               ],
@@ -210,20 +226,14 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _bentoCard({
-    required Widget child,
-    Color? borderColor,
-  }) {
+  Widget _bentoCard({required Widget child, Color? borderColor}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppTheme.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: borderColor ?? Colors.white10,
-          width: 1.5,
-        ),
+        border: Border.all(color: borderColor ?? Colors.white10, width: 1.5),
       ),
       child: child,
     );
@@ -302,4 +312,3 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
     );
   }
 }
-

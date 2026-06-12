@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../routes/etapa3_routes.dart';
+
 /// Going to dashboard (Etapa 2)
 /// Flujo: muestra un estado de progreso y redirige automáticamente.
 /// Refactor clave:
@@ -24,9 +26,9 @@ class _GoingToDashboardScreenState extends State<GoingToDashboardScreen> {
     super.initState();
     _timer = Timer(const Duration(seconds: 3), () {
       if (!mounted) return;
-      // Ruta existente definida en etapa2_routes.dart
-      // Conectar a Stage 1 (Splash EmSafe Updated)
-      Navigator.of(context).pushReplacementNamed('/etapa1/screen1/splash_em_safe_updated');
+      Navigator.of(
+        context,
+      ).pushReplacementNamed(Etapa3Routes.dashboardOverview);
     });
   }
 
@@ -51,10 +53,7 @@ class _GoingToDashboardScreenState extends State<GoingToDashboardScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF0D1117),
-                    Color(0xFF0D1117),
-                  ],
+                  colors: [Color(0xFF0D1117), Color(0xFF0D1117)],
                 ),
               ),
             ),
@@ -79,7 +78,10 @@ class _GoingToDashboardScreenState extends State<GoingToDashboardScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(140 * scale),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 60 * scale, sigmaY: 60 * scale),
+                  filter: ImageFilter.blur(
+                    sigmaX: 60 * scale,
+                    sigmaY: 60 * scale,
+                  ),
                   child: Container(
                     width: 300 * scale,
                     height: 300 * scale,
@@ -96,7 +98,10 @@ class _GoingToDashboardScreenState extends State<GoingToDashboardScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(140 * scale),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 50 * scale, sigmaY: 50 * scale),
+                  filter: ImageFilter.blur(
+                    sigmaX: 50 * scale,
+                    sigmaY: 50 * scale,
+                  ),
                   child: Container(
                     width: 280 * scale,
                     height: 280 * scale,
@@ -146,7 +151,10 @@ class _GoingToDashboardScreenState extends State<GoingToDashboardScreen> {
 
   Widget _buildHeader(double scale) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24 * scale, vertical: 8 * scale),
+      padding: EdgeInsets.symmetric(
+        horizontal: 24 * scale,
+        vertical: 8 * scale,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -200,7 +208,10 @@ class _GoingToDashboardScreenState extends State<GoingToDashboardScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(18 * scale),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10 * scale, sigmaY: 10 * scale),
+                filter: ImageFilter.blur(
+                  sigmaX: 10 * scale,
+                  sigmaY: 10 * scale,
+                ),
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -236,13 +247,13 @@ class _GoingToDashboardScreenState extends State<GoingToDashboardScreen> {
           ),
           SizedBox(height: 12 * scale),
           Text(
-            'Redirecting…',
+            'Opening dashboard...',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
               fontSize: 16 * scale,
-              color: const Color(0xFFC2C6D8).withOpacity(0.6),
+              color: const Color(0xFFC2C6D8).withValues(alpha: 0.6),
             ),
           ),
         ],
@@ -258,7 +269,7 @@ class _GoingToDashboardScreenState extends State<GoingToDashboardScreen> {
         child: Opacity(
           opacity: 0.6,
           child: Text(
-            'Session: pending',
+            'Session authenticated',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Inter',
@@ -285,7 +296,10 @@ class _StatusBox extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10 * scale, sigmaY: 10 * scale),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20 * scale, vertical: 10 * scale),
+          padding: EdgeInsets.symmetric(
+            horizontal: 20 * scale,
+            vertical: 10 * scale,
+          ),
           decoration: BoxDecoration(
             color: const Color.fromRGBO(22, 27, 34, 0.4),
             borderRadius: BorderRadius.circular(30 * scale),
@@ -358,7 +372,7 @@ class _ProtoLine extends StatelessWidget {
             ),
             SizedBox(height: 8 * scale),
             Text(
-              'Session: pending',
+              'Dashboard route ready',
               style: TextStyle(
                 fontFamily: 'JetBrains Mono',
                 fontWeight: FontWeight.w500,
@@ -372,4 +386,3 @@ class _ProtoLine extends StatelessWidget {
     );
   }
 }
-

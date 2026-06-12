@@ -4,10 +4,7 @@ import 'routes/app_routes.dart';
 import 'theme/app_theme.dart';
 import 'screens/etapa1/screen_7_pair_your_sensor.dart';
 
-
-
 void main() {
-
   runApp(const MyApp());
 }
 
@@ -29,7 +26,7 @@ class MyApp extends StatelessWidget {
           return PageRouteBuilder(
             settings: settings,
             opaque: false, // Mantiene viva la pantalla anterior debajo
-            pageBuilder: (context, _, __) => const PairYourSensorScreen(),
+            pageBuilder: (context, _, _) => const PairYourSensorScreen(),
           );
         }
 
@@ -39,5 +36,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-  

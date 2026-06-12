@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../routes/etapa2_routes.dart';
+
 /// Create Account (Etapa 2)
 /// Responsive profesional: sin alturas rígidas/artboards fijos.
 /// - Scroll fluido para teclado.
@@ -145,7 +147,7 @@ class CreateAccountScreen extends StatelessWidget {
                                       onPressed: () {
                                         Navigator.of(
                                           context,
-                                        ).pushNamed('/etapa2/login');
+                                        ).pushNamed(Etapa2Routes.login);
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: const Color(

@@ -18,9 +18,10 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
   @override
   void initState() {
     super.initState();
-    _radarController =
-        AnimationController(duration: const Duration(seconds: 3), vsync: this)
-          ..repeat();
+    _radarController = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..repeat();
   }
 
   @override
@@ -44,6 +45,36 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
       showBrandHeader: false,
+      footer: Padding(
+        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: (56 * scale).clamp(46, 70),
+              child: FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.pairYourSensor);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16 * scale),
+                  ),
+                ),
+                child: Text(
+                  'Pair Device',
+                  style: TextStyle(
+                    fontSize: (16 * scale).clamp(14, 18),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Column(
@@ -77,36 +108,6 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
             _buildStatus(scale: scale),
             SizedBox(height: (18 * scale).clamp(10, 30)),
             Expanded(child: _buildDeviceCard(scale: scale)),
-          ],
-        ),
-      ),
-      footer: Padding(
-        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: (56 * scale).clamp(46, 70),
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.pairYourSensor);
-                },
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16 * scale),
-                  ),
-                ),
-                child: Text(
-                  'Pair Device',
-                  style: TextStyle(
-                    fontSize: (16 * scale).clamp(14, 18),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -161,7 +162,7 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
             width: (80 * scale).clamp(64, 120),
             height: (80 * scale).clamp(64, 120),
             decoration: BoxDecoration(
-              color: const Color(0xFF00C0E9).withOpacity(0.12),
+              color: const Color(0xFF00C0E9).withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12 * scale),
               border: Border.all(
                 color: AppTheme.primaryCyan.withValues(alpha: 0.35),
@@ -184,7 +185,10 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
           Positioned(
             right: (40 * scale).clamp(20, 60),
             top: (16 * scale).clamp(8, 30),
-            child: _dot(scale: scale, color: AppTheme.primaryCyan.withValues(alpha: 1)),
+            child: _dot(
+              scale: scale,
+              color: AppTheme.primaryCyan.withValues(alpha: 1),
+            ),
           ),
           Positioned(
             left: (24 * scale).clamp(10, 40),
@@ -208,10 +212,7 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
         shape: BoxShape.circle,
         color: color,
         boxShadow: [
-          BoxShadow(
-            color: color,
-            blurRadius: (8 * scale).clamp(6, 18),
-          ),
+          BoxShadow(color: color, blurRadius: (8 * scale).clamp(6, 18)),
         ],
       ),
     );
@@ -252,12 +253,12 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
       margin: EdgeInsets.only(bottom: (8 * scale).clamp(0, 12)),
       padding: EdgeInsets.all((24 * scale).clamp(16, 32)),
       decoration: BoxDecoration(
-        color: const Color(0xFF1D1F28).withOpacity(0.65),
+        color: const Color(0xFF1D1F28).withValues(alpha: 0.65),
         borderRadius: BorderRadius.circular(8 * scale),
         border: Border.all(color: AppTheme.cardBorder, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.35),
+            color: Colors.black.withValues(alpha: 0.35),
             blurRadius: (32 * scale).clamp(18, 60),
           ),
         ],
@@ -354,4 +355,3 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
     );
   }
 }
-

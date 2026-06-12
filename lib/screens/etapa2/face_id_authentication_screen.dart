@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../routes/etapa2_routes.dart';
+
 /// Face ID Authentication (Etapa 2)
 /// Refactor responsive: sin artboard rígido/altura fija.
 class FaceIdAuthenticationScreen extends StatelessWidget {
@@ -44,7 +46,7 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.4),
+                                color: Colors.black.withValues(alpha: 0.4),
                                 blurRadius: 40 * scale,
                                 offset: Offset(0, 20 * scale),
                               ),
@@ -65,8 +67,9 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                                       width: 32 * scale,
                                       height: 32 * scale,
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12 * scale),
+                                        borderRadius: BorderRadius.circular(
+                                          12 * scale,
+                                        ),
                                       ),
                                       child: Icon(
                                         Icons.close,
@@ -81,11 +84,16 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFF272A33),
-                                        borderRadius:
-                                            BorderRadius.circular(4 * scale),
+                                        borderRadius: BorderRadius.circular(
+                                          4 * scale,
+                                        ),
                                         border: Border.all(
                                           color: const Color.fromRGBO(
-                                              66, 70, 85, 0.2),
+                                            66,
+                                            70,
+                                            85,
+                                            0.2,
+                                          ),
                                           width: 1,
                                         ),
                                       ),
@@ -142,18 +150,28 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                                 // Scanner graphic
                                 Center(
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12 * scale),
+                                    borderRadius: BorderRadius.circular(
+                                      12 * scale,
+                                    ),
                                     child: BackdropFilter(
-                                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                      filter: ImageFilter.blur(
+                                        sigmaX: 10,
+                                        sigmaY: 10,
+                                      ),
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF161B24),
-                                          borderRadius:
-                                              BorderRadius.circular(12 * scale),
+                                          borderRadius: BorderRadius.circular(
+                                            12 * scale,
+                                          ),
                                           border: Border.all(
                                             color: const Color.fromRGBO(
-                                                66, 70, 85, 0.3),
+                                              66,
+                                              70,
+                                              85,
+                                              0.3,
+                                            ),
                                             width: 2,
                                           ),
                                         ),
@@ -165,54 +183,75 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                                               children: [
                                                 Center(
                                                   child: Container(
-                                                    width: 220 * scale / (0.85 * scale + 0.15),
-                                                    height: 220 * scale / (0.85 * scale + 0.15),
+                                                    width: 220 * scale,
+                                                    height: 220 * scale,
                                                     decoration: BoxDecoration(
-                                                      gradient: const LinearGradient(
-                                                        colors: [
-                                                          Color(0xFFFFFFFF),
-                                                          Color(0xFFECF0FF)
-                                                        ],
-                                                        begin: Alignment.topCenter,
-                                                        end: Alignment.bottomCenter,
-                                                      ),
+                                                      gradient:
+                                                          const LinearGradient(
+                                                            colors: [
+                                                              Color(0xFFFFFFFF),
+                                                              Color(0xFFECF0FF),
+                                                            ],
+                                                            begin: Alignment
+                                                                .topCenter,
+                                                            end: Alignment
+                                                                .bottomCenter,
+                                                          ),
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              12 * scale),
+                                                            12 * scale,
+                                                          ),
                                                     ),
                                                     child: Icon(
                                                       Icons.person,
                                                       size: 96 * scale,
-                                                      color:
-                                                          const Color(0xFFB2C5FF)
-                                                              .withOpacity(0.6),
+                                                      color: const Color(
+                                                        0xFFB2C5FF,
+                                                      ).withValues(alpha: 0.6),
                                                     ),
                                                   ),
                                                 ),
                                                 Positioned(
                                                   left: 0,
                                                   right: 0,
-                                                  top: 90 * scale / (0.85 * scale + 0.15),
+                                                  top: 90 * scale,
                                                   child: Container(
                                                     height: 6 * scale,
                                                     decoration: BoxDecoration(
-                                                      gradient: const LinearGradient(
-                                                        begin: Alignment.topCenter,
-                                                        end: Alignment.bottomCenter,
-                                                        colors: [
-                                                          Color.fromRGBO(
-                                                              101, 218, 255, 0),
-                                                          Color(0xFF65DAFF),
-                                                          Color.fromRGBO(
-                                                              101, 218, 255, 0),
-                                                        ],
-                                                        stops: [0.0, 0.5, 1.0],
-                                                      ),
+                                                      gradient:
+                                                          const LinearGradient(
+                                                            begin: Alignment
+                                                                .topCenter,
+                                                            end: Alignment
+                                                                .bottomCenter,
+                                                            colors: [
+                                                              Color.fromRGBO(
+                                                                101,
+                                                                218,
+                                                                255,
+                                                                0,
+                                                              ),
+                                                              Color(0xFF65DAFF),
+                                                              Color.fromRGBO(
+                                                                101,
+                                                                218,
+                                                                255,
+                                                                0,
+                                                              ),
+                                                            ],
+                                                            stops: [
+                                                              0.0,
+                                                              0.5,
+                                                              1.0,
+                                                            ],
+                                                          ),
                                                       boxShadow: [
                                                         BoxShadow(
-                                                          color:
-                                                              const Color(0xFF65DAFF),
-                                                          blurRadius: 20 * scale,
+                                                          color: const Color(
+                                                            0xFF65DAFF,
+                                                          ),
+                                                          blurRadius:
+                                                              20 * scale,
                                                         ),
                                                       ],
                                                     ),
@@ -227,21 +266,31 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                                                       width: 48 * scale,
                                                       height: 48 * scale,
                                                       decoration: BoxDecoration(
-                                                        color: const Color(0xFF00C0E9),
+                                                        color: const Color(
+                                                          0xFF00C0E9,
+                                                        ),
                                                         borderRadius:
                                                             BorderRadius.circular(
-                                                                12 * scale),
+                                                              12 * scale,
+                                                            ),
                                                         border: Border.all(
                                                           color: Colors.white
-                                                              .withOpacity(0.2),
+                                                              .withValues(
+                                                                alpha: 0.2,
+                                                              ),
                                                           width: 2,
                                                         ),
                                                         boxShadow: [
                                                           BoxShadow(
-                                                            color: const Color
-                                                                    .fromRGBO(
-                                                                0, 192, 233, 0.5),
-                                                            blurRadius: 15 * scale,
+                                                            color:
+                                                                const Color.fromRGBO(
+                                                                  0,
+                                                                  192,
+                                                                  233,
+                                                                  0.5,
+                                                                ),
+                                                            blurRadius:
+                                                                15 * scale,
                                                           ),
                                                         ],
                                                       ),
@@ -249,7 +298,9 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                                                         child: Container(
                                                           width: 16.3 * scale,
                                                           height: 12.02 * scale,
-                                                          color: const Color(0xFF004A5B),
+                                                          color: const Color(
+                                                            0xFF004A5B,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -296,14 +347,15 @@ class FaceIdAuthenticationScreen extends StatelessWidget {
                                     onPressed: () {
                                       // Face ID -> Going to dashboard (etapa 2)
                                       Navigator.of(context).pushNamed(
-                                        '/etapa2/going-to-dashboard',
+                                        Etapa2Routes.goingToDashboard,
                                       );
                                     },
                                     style: TextButton.styleFrom(
                                       backgroundColor: const Color(0xFFB2C5FF),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12 * scale),
+                                        borderRadius: BorderRadius.circular(
+                                          12 * scale,
+                                        ),
                                       ),
                                     ),
                                     child: Text(
@@ -394,4 +446,3 @@ class _ReadoutBox extends StatelessWidget {
     );
   }
 }
-

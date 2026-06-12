@@ -21,6 +21,42 @@ class OnboardingSmartAlertsScreen extends StatelessWidget {
       onSkip: () {
         Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
       },
+      footer: Padding(
+        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildProgressBar(activeIndex: 0, scale: scale),
+            SizedBox(height: (22 * scale).clamp(16, 28)),
+            SizedBox(
+              width: double.infinity,
+              height: (56 * scale).clamp(46, 70),
+              child: FilledButton(
+                onPressed: () {
+                  Navigator.of(
+                    context,
+                  ).pushNamed(AppRoutes.onboardingAstraAssistant);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      16 * scale.clamp(0.85, 1.15),
+                    ),
+                  ),
+                ),
+                child: Text(
+                  'Next',
+                  style: TextStyle(
+                    fontSize: (16 * scale).clamp(14, 18),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Column(
@@ -49,38 +85,6 @@ class OnboardingSmartAlertsScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-          ],
-        ),
-      ),
-      footer: Padding(
-        padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildProgressBar(activeIndex: 0, scale: scale),
-            SizedBox(height: (22 * scale).clamp(16, 28)),
-            SizedBox(
-              width: double.infinity,
-              height: (56 * scale).clamp(46, 70),
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.onboardingAstraAssistant);
-                },
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.primaryBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16 * scale.clamp(0.85, 1.15)),
-                  ),
-                ),
-                child: Text(
-                  'Next',
-                  style: TextStyle(
-                    fontSize: (16 * scale).clamp(14, 18),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -221,4 +225,3 @@ class OnboardingSmartAlertsScreen extends StatelessWidget {
     );
   }
 }
-

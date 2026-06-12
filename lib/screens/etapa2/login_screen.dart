@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../routes/etapa2_routes.dart';
+
 /// Login (Etapa 2)
 /// Responsive + compacto y fiel a Figma (sin alturas rígidas).
 class LoginScreen extends StatelessWidget {
@@ -188,7 +190,9 @@ class LoginScreen extends StatelessWidget {
           height: 56 * scale,
           child: InkWell(
             onTap: () {
-              Navigator.of(context).pushNamed('/etapa2/face-id');
+              Navigator.of(
+                context,
+              ).pushNamed(Etapa2Routes.faceIdAuthentication);
             },
             borderRadius: BorderRadius.circular(8 * scale),
             child: Container(
@@ -234,7 +238,7 @@ class LoginScreen extends StatelessWidget {
           height: 48 * scale,
           child: TextButton(
             onPressed: () {
-              Navigator.of(context).pushNamed('/etapa2/reset-password');
+              Navigator.of(context).pushNamed(Etapa2Routes.resetPassword);
             },
             style: TextButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -275,7 +279,7 @@ class LoginScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () =>
-                  Navigator.of(context).pushNamed('/etapa2/create-account'),
+                  Navigator.of(context).pushNamed(Etapa2Routes.createAccount),
               child: Text(
                 'Sign Up',
                 style: TextStyle(

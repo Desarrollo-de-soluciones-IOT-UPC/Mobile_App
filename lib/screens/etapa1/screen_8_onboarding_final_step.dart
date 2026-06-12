@@ -13,12 +13,36 @@ class OnboardingFinalStepScreen extends StatelessWidget {
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
       onSkip: () {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRoutes.splash1,
-          (route) => false,
-        );
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil(AppRoutes.splash1, (route) => false);
       },
       showBrandHeader: false,
+      footer: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        child: SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: FilledButton(
+            onPressed: () {
+              // Al finalizar Etapa 1, iniciar Etapa 2 en el orden correcto:
+              // Create Account -> Login.
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                Etapa2Routes.createAccount,
+                (route) => false,
+              );
+            },
+
+            style: FilledButton.styleFrom(
+              backgroundColor: AppTheme.primaryBlue,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: const Text('Start Monitoring'),
+          ),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
@@ -60,31 +84,6 @@ class OnboardingFinalStepScreen extends StatelessWidget {
           ],
         ),
       ),
-      footer: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        child: SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: FilledButton(
-            onPressed: () {
-              // Al finalizar Etapa 1, iniciar Etapa 2 en el orden correcto:
-              // Create Account -> Login.
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                Etapa2Routes.createAccount,
-                (route) => false,
-              );
-            },
-
-            style: FilledButton.styleFrom(
-              backgroundColor: AppTheme.primaryBlue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            child: const Text('Start Monitoring'),
-          ),
-        ),
-      ),
     );
   }
 
@@ -119,7 +118,8 @@ class OnboardingFinalStepScreen extends StatelessWidget {
           _buildFeatureRow(
             icon: Icons.notifications_active,
             title: 'Instant Alerts',
-            subtitle: 'Critical notifications even when your device is on silent.',
+            subtitle:
+                'Critical notifications even when your device is on silent.',
           ),
         ],
       ),
@@ -141,11 +141,7 @@ class OnboardingFinalStepScreen extends StatelessWidget {
             color: AppTheme.primaryCyan.withValues(alpha: 0.18),
             borderRadius: BorderRadius.circular(14),
           ),
-          child: Icon(
-            icon,
-            color: AppTheme.primaryCyan,
-            size: 22,
-          ),
+          child: Icon(icon, color: AppTheme.primaryCyan, size: 22),
         ),
         const SizedBox(width: 14),
         Expanded(
@@ -176,4 +172,3 @@ class OnboardingFinalStepScreen extends StatelessWidget {
     );
   }
 }
-

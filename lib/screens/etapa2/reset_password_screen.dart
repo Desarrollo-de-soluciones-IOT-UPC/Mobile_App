@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../routes/etapa2_routes.dart';
+
 /// Reset Password (Etapa 2)
-/// Responsive + compacto: sin artboard rígido y con inputs reales.
+/// Responsive + compacto: sin artboard rigido y con inputs reales.
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({super.key});
 
@@ -43,7 +45,7 @@ class ResetPasswordScreen extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
+                              color: Colors.black.withValues(alpha: 0.4),
                               blurRadius: 40 * scale,
                               offset: Offset(0, 20 * scale),
                             ),
@@ -66,7 +68,7 @@ class ResetPasswordScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 8 * scale),
                               Text(
-                                'Enter your email and we’ll send a reset link.',
+                                "Enter your email and we'll send a reset link.",
                                 style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontWeight: FontWeight.w400,
@@ -110,16 +112,18 @@ class ResetPasswordScreen extends StatelessWidget {
                                     size: 20 * scale,
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(6 * scale),
+                                    borderRadius: BorderRadius.circular(
+                                      6 * scale,
+                                    ),
                                     borderSide: const BorderSide(
                                       color: Color.fromRGBO(66, 70, 85, 0.5),
                                       width: 1,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(6 * scale),
+                                    borderRadius: BorderRadius.circular(
+                                      6 * scale,
+                                    ),
                                     borderSide: const BorderSide(
                                       color: Color(0xFF5B8CFF),
                                       width: 1.2,
@@ -136,7 +140,7 @@ class ResetPasswordScreen extends StatelessWidget {
 
                               SizedBox(height: 10 * scale),
                               Text(
-                                'We’ll send a reset link to your inbox.',
+                                "We'll send a reset link to your inbox.",
                                 style: TextStyle(
                                   fontFamily: 'JetBrains Mono',
                                   fontWeight: FontWeight.w400,
@@ -154,9 +158,9 @@ class ResetPasswordScreen extends StatelessWidget {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     // Reset Password -> Login
-                                    Navigator.of(context).pushNamed(
-                                      '/etapa2/login',
-                                    );
+                                    Navigator.of(
+                                      context,
+                                    ).pushNamed(Etapa2Routes.login);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF5B8CFF),
@@ -193,4 +197,3 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 }
-
