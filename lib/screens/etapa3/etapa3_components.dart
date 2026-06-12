@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../routes/etapa3_routes.dart';
+
 class Etapa3Palette {
   static const bg = Color(0xFF10131B);
   static const panel = Color(0xFF1D1F28);
@@ -295,10 +297,14 @@ class Stage3BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (Icons.dashboard_outlined, 'Home'),
-      (Icons.monitor_heart_outlined, 'Monitor'),
-      (Icons.notifications_none, 'Alerts'),
-      (Icons.settings_outlined, 'Settings'),
+      (Icons.dashboard_outlined, 'Home', Etapa3Routes.dashboardOverview),
+      (
+        Icons.monitor_heart_outlined,
+        'Monitor',
+        Etapa3Routes.sensorMonitoringDetail,
+      ),
+      (Icons.notifications_none, 'Alerts', Etapa3Routes.alertHistory),
+      (Icons.settings_outlined, 'Settings', Etapa3Routes.systemSettings),
     ];
 
     return ClipRRect(
@@ -319,6 +325,10 @@ class Stage3BottomNav extends StatelessWidget {
                   icon: items[index].$1,
                   label: items[index].$2,
                   selected: selectedIndex == index,
+                  onTap: () {
+                    if (selectedIndex == index) return;
+                    Navigator.of(context).pushReplacementNamed(items[index].$3);
+                  },
                 ),
             ],
           ),
@@ -333,33 +343,45 @@ class _BottomNavItem extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.selected,
+    required this.onTap,
   });
 
   final IconData icon;
   final String label;
   final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final color = selected ? Etapa3Palette.cyan : Etapa3Palette.quiet;
-    return SizedBox(
-      width: 72,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 22),
-          const SizedBox(height: 5),
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: color,
-              fontSize: 11,
-              fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+    return Tooltip(
+      message: label,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: SizedBox(
+          width: 72,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: color, size: 22),
+                const SizedBox(height: 5),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 11,
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
