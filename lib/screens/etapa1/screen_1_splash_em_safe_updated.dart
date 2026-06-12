@@ -310,7 +310,7 @@ class _Header extends StatelessWidget {
             onPressed: () {
               Navigator.of(
                 context,
-              ).pushReplacementNamed(AppRoutes.onboardingSmartAlerts);
+              ).pushReplacementNamed(Etapa2Routes.personalDetails);
             },
             child: const Text('Skip', style: TextStyle(color: Colors.white)),
           ),

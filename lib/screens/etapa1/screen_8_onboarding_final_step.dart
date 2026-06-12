@@ -25,10 +25,8 @@ class OnboardingFinalStepScreen extends StatelessWidget {
           height: 56,
           child: FilledButton(
             onPressed: () {
-              // Al finalizar Etapa 1, iniciar Etapa 2 en el orden correcto:
-              // Create Account -> Login.
               Navigator.of(context).pushNamedAndRemoveUntil(
-                Etapa2Routes.createAccount,
+                Etapa2Routes.personalDetails,
                 (route) => false,
               );
             },

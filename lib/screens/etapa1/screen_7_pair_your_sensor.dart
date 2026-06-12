@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../../routes/app_routes.dart';
+import '../../routes/etapa2_routes.dart';
 import '../../theme/app_theme.dart';
 
 /// POPUP sobre la pantalla de Pairing Sensors.
@@ -345,7 +345,9 @@ class PairYourSensorScreen extends StatelessWidget {
       height: (56 * scale).clamp(46, 74),
       child: ElevatedButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
+          Navigator.of(
+            context,
+          ).pushNamedAndRemoveUntil(Etapa2Routes.login, (route) => false);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF2D76FF),
@@ -355,7 +357,7 @@ class PairYourSensorScreen extends StatelessWidget {
           ),
         ),
         child: Text(
-          'Next',
+          'Finish Setup',
           style: TextStyle(
             fontSize: (16 * scale).clamp(14, 20),
             fontWeight: FontWeight.w700,

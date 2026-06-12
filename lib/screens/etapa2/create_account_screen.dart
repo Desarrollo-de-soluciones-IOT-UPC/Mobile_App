@@ -2,25 +2,50 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../../routes/app_routes.dart';
 import '../../routes/etapa2_routes.dart';
+import '../../services/onboarding_flow_store.dart';
 
-/// Create Account (Etapa 2)
-/// Responsive profesional: sin alturas rígidas/artboards fijos.
-/// - Scroll fluido para teclado.
-/// - Campos reales (TextFormField) en vez de cajas simuladas.
-class CreateAccountScreen extends StatelessWidget {
+class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen({super.key});
 
   @override
+  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
+}
+
+class _CreateAccountScreenState extends State<CreateAccountScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (!isValid) return;
+
+    await OnboardingFlowStore.markAccountCreated();
+    if (!mounted) return;
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(AppRoutes.pairingSensors, (route) => false);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final draft = OnboardingFlowStore.personalDetailsDraft;
     final size = MediaQuery.sizeOf(context);
-    final double scale = (size.width / 390).clamp(0.85, 1.15);
+    final scale = (size.width / 390).clamp(0.85, 1.15);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B0F19),
       body: Stack(
         children: [
-          // Ambient background
           Positioned.fill(
             child: Align(
               alignment: Alignment.center,
@@ -34,7 +59,6 @@ class CreateAccountScreen extends StatelessWidget {
               ),
             ),
           ),
-
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -55,6 +79,7 @@ class CreateAccountScreen extends StatelessWidget {
                           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                           child: Container(
                             constraints: const BoxConstraints(maxWidth: 420),
+                            padding: EdgeInsets.all(24 * scale),
                             decoration: BoxDecoration(
                               color: const Color(0x0D161B22),
                               borderRadius: BorderRadius.circular(16 * scale),
@@ -75,18 +100,17 @@ class CreateAccountScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.all(24 * scale),
+                            child: Form(
+                              key: _formKey,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // Title + subtitle
                                   Text(
                                     'Create Account',
                                     style: TextStyle(
                                       fontSize: 32 * scale,
-                                      height: 40 / (32),
+                                      height: 1.25,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: -0.8 * scale,
                                       color: const Color(0xFFB2C5FF),
@@ -95,60 +119,66 @@ class CreateAccountScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 8 * scale),
                                   Text(
-                                    'Begin your secure session and connect your monitoring hardware.',
+                                    'Set your password before connecting monitoring hardware.',
                                     style: TextStyle(
                                       fontSize: 16 * scale,
-                                      height: 24 / 16,
+                                      height: 1.5,
                                       fontWeight: FontWeight.w400,
                                       color: const Color(0xFFC2C6D8),
                                       fontFamily: 'Inter',
                                     ),
                                   ),
                                   SizedBox(height: 24 * scale),
-
-                                  // Form
-                                  _FieldBlock(
-                                    label: 'FULL NAME',
-                                    hintText: 'John Doe',
-                                    icon: Icons.person_outline,
-                                    scale: scale,
-                                  ),
-                                  SizedBox(height: 24 * scale),
-
-                                  _FieldBlock(
-                                    label: 'EMAIL ADDRESS',
-                                    hintText: 'alex.vance@tech.com',
-                                    icon: Icons.mail_outline,
-                                    scale: scale,
-                                  ),
-                                  SizedBox(height: 16 * scale),
-
+                                  if (draft == null)
+                                    _MissingDetailsCard(scale: scale)
+                                  else
+                                    _PersonalDetailsSummary(
+                                      draft: draft,
+                                      scale: scale,
+                                    ),
+                                  SizedBox(height: 18 * scale),
                                   _PasswordBlock(
+                                    controller: _passwordController,
                                     label: 'PASSWORD',
-                                    hintText: '••••••••••••••',
+                                    hintText: 'Minimum 8 characters',
                                     scale: scale,
                                     showStrength: true,
+                                    validator: (value) {
+                                      if ((value ?? '').length < 8) {
+                                        return 'Use at least 8 characters';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                   SizedBox(height: 16 * scale),
-
                                   _PasswordBlock(
+                                    controller: _confirmPasswordController,
                                     label: 'CONFIRM PASSWORD',
-                                    hintText: '••••••••••••••',
+                                    hintText: 'Repeat password',
                                     scale: scale,
                                     showStrength: false,
+                                    validator: (value) {
+                                      if ((value ?? '').isEmpty) {
+                                        return 'Confirm your password';
+                                      }
+                                      if (value != _passwordController.text) {
+                                        return 'Passwords do not match';
+                                      }
+                                      return null;
+                                    },
                                   ),
-
                                   SizedBox(height: 24 * scale),
-
                                   SizedBox(
                                     width: double.infinity,
                                     height: 56 * scale,
                                     child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(
-                                          context,
-                                        ).pushNamed(Etapa2Routes.login);
-                                      },
+                                      onPressed: draft == null
+                                          ? () {
+                                              Navigator.of(context).pushNamed(
+                                                Etapa2Routes.personalDetails,
+                                              );
+                                            }
+                                          : _submit,
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: const Color(
                                           0xFF5B8CFF,
@@ -161,20 +191,20 @@ class CreateAccountScreen extends StatelessWidget {
                                         ),
                                       ),
                                       child: Text(
-                                        'Continue',
+                                        draft == null
+                                            ? 'Add Personal Details'
+                                            : 'Continue to Sensors',
                                         style: TextStyle(
                                           fontFamily: 'Sora',
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 16 * scale,
                                           color: const Color(0xFF002565),
                                         ),
                                       ),
                                     ),
                                   ),
-
-                                  SizedBox(height: 8 * scale),
+                                  SizedBox(height: 14 * scale),
                                   _TermsAndFooter(scale: scale),
-                                  SizedBox(height: 8 * scale),
                                 ],
                               ),
                             ),
@@ -193,96 +223,121 @@ class CreateAccountScreen extends StatelessWidget {
   }
 }
 
-class _FieldBlock extends StatelessWidget {
-  const _FieldBlock({
-    required this.label,
-    required this.hintText,
-    required this.icon,
-    required this.scale,
-  });
+class _PersonalDetailsSummary extends StatelessWidget {
+  const _PersonalDetailsSummary({required this.draft, required this.scale});
 
-  final String label;
-  final String hintText;
-  final IconData icon;
+  final PersonalDetailsDraft draft;
   final double scale;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontFamily: 'JetBrains Mono',
-            fontWeight: FontWeight.w500,
-            fontSize: 12 * scale,
-            height: 16 / 12,
-            color: const Color(0xFFC2C6D8),
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16 * scale),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0B0E16),
+        borderRadius: BorderRadius.circular(12 * scale),
+        border: Border.all(color: const Color.fromRGBO(101, 218, 255, 0.18)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42 * scale,
+            height: 42 * scale,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(101, 218, 255, 0.12),
+              borderRadius: BorderRadius.circular(12 * scale),
+            ),
+            child: const Icon(
+              Icons.verified_user_outlined,
+              color: Color(0xFF65DAFF),
+            ),
           ),
-        ),
-        SizedBox(height: 4 * scale),
-        TextFormField(
-          keyboardType: label == 'EMAIL ADDRESS'
-              ? TextInputType.emailAddress
-              : TextInputType.name,
-          style: const TextStyle(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-            color: Colors.white,
+          SizedBox(width: 12 * scale),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  draft.displayName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16 * scale,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: 4 * scale),
+                Text(
+                  '${draft.clientTypeLabel} - ${draft.email}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: const Color(0xFFC2C6D8),
+                    fontSize: 12 * scale,
+                  ),
+                ),
+              ],
+            ),
           ),
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-              color: const Color(0xFF8C90A1),
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-              fontSize: 16 * scale,
-            ),
-            filled: true,
-            fillColor: const Color(0xFF0B0E16),
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 18 * scale,
-              horizontal: 16 * scale,
-            ),
-            prefixIcon: Icon(
-              icon,
-              color: const Color(0xFF65DAFF),
-              size: 20 * scale,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6 * scale),
-              borderSide: const BorderSide(
-                color: Color.fromRGBO(66, 70, 85, 0.35),
-                width: 1,
+        ],
+      ),
+    );
+  }
+}
+
+class _MissingDetailsCard extends StatelessWidget {
+  const _MissingDetailsCard({required this.scale});
+
+  final double scale;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16 * scale),
+      decoration: BoxDecoration(
+        color: const Color.fromRGBO(245, 158, 11, 0.08),
+        borderRadius: BorderRadius.circular(12 * scale),
+        border: Border.all(color: const Color.fromRGBO(245, 158, 11, 0.28)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.info_outline, color: Color(0xFFF59E0B)),
+          SizedBox(width: 12 * scale),
+          Expanded(
+            child: Text(
+              'Complete Personal Details before creating your password.',
+              style: TextStyle(
+                color: const Color(0xFFC2C6D8),
+                fontSize: 13 * scale,
+                height: 1.4,
               ),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6 * scale),
-              borderSide: const BorderSide(
-                color: Color.fromRGBO(91, 140, 255, 1),
-                width: 1.2,
-              ),
-            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
 class _PasswordBlock extends StatefulWidget {
   const _PasswordBlock({
+    required this.controller,
     required this.label,
     required this.hintText,
     required this.scale,
     required this.showStrength,
+    this.validator,
   });
 
+  final TextEditingController controller;
   final String label;
   final String hintText;
   final double scale;
   final bool showStrength;
+  final String? Function(String?)? validator;
 
   @override
   State<_PasswordBlock> createState() => _PasswordBlockState();
@@ -302,13 +357,15 @@ class _PasswordBlockState extends State<_PasswordBlock> {
             fontFamily: 'JetBrains Mono',
             fontWeight: FontWeight.w500,
             fontSize: 12 * widget.scale,
-            height: 16 / (12),
+            height: 16 / 12,
             color: const Color(0xFFC2C6D8),
           ),
         ),
         SizedBox(height: 4 * widget.scale),
         TextFormField(
+          controller: widget.controller,
           obscureText: _obscurePassword,
+          validator: widget.validator,
           style: const TextStyle(
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
@@ -357,9 +414,19 @@ class _PasswordBlockState extends State<_PasswordBlock> {
                 width: 1.2,
               ),
             ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6 * widget.scale),
+              borderSide: const BorderSide(color: Color(0xFFEF4444)),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6 * widget.scale),
+              borderSide: const BorderSide(
+                color: Color(0xFFEF4444),
+                width: 1.2,
+              ),
+            ),
           ),
         ),
-
         if (widget.showStrength) ...[
           SizedBox(height: 8 * widget.scale),
           SizedBox(
@@ -412,79 +479,49 @@ class _TermsAndFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 48 * scale,
-          width: double.infinity,
-          child: Stack(
-            children: [
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                child: Center(
-                  child: Text(
-                    'Terms',
-                    style: TextStyle(
-                      fontFamily: 'JetBrains Mono',
-                      fontSize: 12 * scale,
-                      height: 16 / 12,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFFC2C6D8),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 16 * scale,
-                child: Center(
-                  child: Text(
-                    'Link → Privacy Protocol',
-                    style: TextStyle(
-                      fontFamily: 'JetBrains Mono',
-                      fontSize: 12 * scale,
-                      height: 16 / 12,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFFB2C5FF),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+        Text(
+          'Secure setup - Privacy Protocol',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'JetBrains Mono',
+            fontSize: 12 * scale,
+            height: 1.4,
+            fontWeight: FontWeight.w500,
+            color: const Color(0xFFB2C5FF),
           ),
         ),
-        SizedBox(
-          height: 51 * scale,
-          width: double.infinity,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 25.77 * scale,
-              vertical: 24 * scale,
-            ),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: const Color.fromRGBO(66, 70, 85, 0.2),
-                  width: 1,
-                ),
+        SizedBox(height: 16 * scale),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Already have an account? ',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 14 * scale,
+                color: const Color(0xFFC2C6D8),
               ),
             ),
-            child: Center(
+            TextButton(
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(Etapa2Routes.login),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                foregroundColor: const Color(0xFFB2C5FF),
+              ),
               child: Text(
-                'Already have an account?',
+                'Sign In',
                 style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16 * scale,
-                  height: 24 / 16,
-                  color: const Color(0xFFC2C6D8),
+                  fontSize: 14 * scale,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ],
     );

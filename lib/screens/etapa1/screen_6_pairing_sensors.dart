@@ -41,9 +41,6 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
 
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
-      onSkip: () {
-        Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
-      },
       showBrandHeader: false,
       footer: Padding(
         padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
@@ -94,7 +91,7 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
             ),
             SizedBox(height: (8 * scale).clamp(6, 16)),
             Text(
-              'Ensure your device is powered and nearby.',
+              'No sensors are paired yet. Your setup is ready for the technician or the next pairing step.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white70,
@@ -107,7 +104,7 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
             SizedBox(height: (16 * scale).clamp(10, 30)),
             _buildStatus(scale: scale),
             SizedBox(height: (18 * scale).clamp(10, 30)),
-            Expanded(child: _buildDeviceCard(scale: scale)),
+            Expanded(child: _buildSensorQueue(scale: scale)),
           ],
         ),
       ),
@@ -248,7 +245,13 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
     );
   }
 
-  Widget _buildDeviceCard({required double scale}) {
+  Widget _buildSensorQueue({required double scale}) {
+    final sensors = [
+      ('Primary sensor', 'Waiting for technician', Icons.engineering_outlined),
+      ('Bedroom sensor', 'Not paired yet', Icons.sensors_outlined),
+      ('Expansion slot', 'Ready for future devices', Icons.add_link_outlined),
+    ];
+
     return Container(
       margin: EdgeInsets.only(bottom: (8 * scale).clamp(0, 12)),
       padding: EdgeInsets.all((24 * scale).clamp(16, 32)),
@@ -264,94 +267,119 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'EMSafe S1 Hub detected',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: (20 * scale).clamp(16, 24),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: (8 * scale).clamp(4, 14)),
-                    Text(
-                      'Secure Protocol',
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: (14 * scale).clamp(12, 18),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               Icon(
-                Icons.check_circle,
+                Icons.pending_actions_outlined,
                 color: AppTheme.primaryCyan,
-                size: (24 * scale).clamp(18, 34),
+                size: (24 * scale).clamp(20, 34),
+              ),
+              SizedBox(width: (10 * scale).clamp(8, 14)),
+              Expanded(
+                child: Text(
+                  'Sensor queue',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: (20 * scale).clamp(16, 24),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ],
           ),
-          SizedBox(height: (16 * scale).clamp(10, 28)),
+          SizedBox(height: (8 * scale).clamp(4, 14)),
+          Text(
+            'This area can display one, two, or multiple devices when backend inventory is available.',
+            style: TextStyle(
+              color: Colors.white54,
+              fontSize: (13 * scale).clamp(11, 16),
+              height: 1.45,
+            ),
+          ),
+          SizedBox(height: (16 * scale).clamp(10, 22)),
           Divider(color: Colors.white10),
-          SizedBox(height: (12 * scale).clamp(6, 18)),
-          _infoBar(scale: scale),
+          SizedBox(height: (12 * scale).clamp(8, 18)),
+          for (final sensor in sensors) ...[
+            _sensorQueueRow(
+              title: sensor.$1,
+              status: sensor.$2,
+              icon: sensor.$3,
+              scale: scale,
+            ),
+            SizedBox(height: (10 * scale).clamp(8, 14)),
+          ],
         ],
       ),
     );
   }
 
-  Widget _infoBar({required double scale}) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Signal Strength',
-              style: TextStyle(
-                color: Colors.white54,
-                fontSize: (14 * scale).clamp(12, 18),
-              ),
+  Widget _sensorQueueRow({
+    required String title,
+    required String status,
+    required IconData icon,
+    required double scale,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: (12 * scale).clamp(10, 16),
+        vertical: (12 * scale).clamp(10, 16),
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F1520).withValues(alpha: 0.68),
+        borderRadius: BorderRadius.circular(12 * scale),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: (36 * scale).clamp(30, 48),
+            height: (36 * scale).clamp(30, 48),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryCyan.withValues(alpha: 0.11),
+              borderRadius: BorderRadius.circular(10 * scale),
             ),
-            Text(
-              'Excellent',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: (14 * scale).clamp(12, 18),
-              ),
+            child: Icon(
+              icon,
+              color: AppTheme.primaryCyan,
+              size: (19 * scale).clamp(16, 26),
             ),
-          ],
-        ),
-        SizedBox(height: (12 * scale).clamp(6, 18)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Firmware',
-              style: TextStyle(
-                color: Colors.white54,
-                fontSize: (14 * scale).clamp(12, 18),
-              ),
+          ),
+          SizedBox(width: (12 * scale).clamp(8, 14)),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: (14 * scale).clamp(12, 18),
+                  ),
+                ),
+                SizedBox(height: (3 * scale).clamp(2, 6)),
+                Text(
+                  status,
+                  style: TextStyle(
+                    color: Colors.white54,
+                    fontSize: (12 * scale).clamp(11, 15),
+                  ),
+                ),
+              ],
             ),
-            Text(
-              'v2.4.0 Stable',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: (14 * scale).clamp(12, 18),
-              ),
+          ),
+          Container(
+            width: (8 * scale).clamp(6, 10),
+            height: (8 * scale).clamp(6, 10),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppTheme.warningOrange.withValues(alpha: 0.88),
             ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

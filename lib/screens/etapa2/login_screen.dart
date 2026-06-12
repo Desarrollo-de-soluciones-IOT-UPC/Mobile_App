@@ -279,7 +279,7 @@ class LoginScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () =>
-                  Navigator.of(context).pushNamed(Etapa2Routes.createAccount),
+                  Navigator.of(context).pushNamed(Etapa2Routes.personalDetails),
               child: Text(
                 'Sign Up',
                 style: TextStyle(

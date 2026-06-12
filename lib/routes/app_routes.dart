@@ -5,7 +5,6 @@ import '../screens/etapa1/screen_1_splash_official_brand.dart';
 import '../screens/etapa1/screen_2_onboarding_smart_alerts.dart';
 import '../screens/etapa1/screen_3_onboarding_astra_ai_assistant.dart';
 import '../screens/etapa1/screen_4_onboarding_smart_home_protection.dart';
-import '../screens/etapa1/screen_5_home_profile_setup.dart';
 import '../screens/etapa1/screen_6_pairing_sensors.dart';
 
 import '../screens/etapa1/screen_8_onboarding_final_step.dart';
@@ -22,7 +21,6 @@ class AppRoutes {
       '/etapa1/screen3/onboarding_astra_ai_assistant';
   static const String onboardingSmartHomeProtection =
       '/etapa1/screen4/onboarding_smart_home_protection';
-  static const String homeProfileSetup = '/etapa1/screen5/home_profile_setup';
   static const String pairingSensors = '/etapa1/screen6/pairing_sensors';
   static const String pairYourSensor = '/etapa1/screen7/pair_your_sensor';
   static const String onboardingFinalStep =
@@ -36,7 +34,6 @@ class AppRoutes {
         const OnboardingAstraAIAssistantScreen(),
     onboardingSmartHomeProtection: (context) =>
         const OnboardingSmartHomeProtectionScreen(),
-    homeProfileSetup: (context) => const HomeProfileSetupScreen(),
     pairingSensors: (context) => const PairingSensorsScreen(),
     // Interceptado en main.dart con PageRouteBuilder(opaque:false) para efecto cristal.
     // pairYourSensor: (context) => const PairYourSensorScreen(),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../routes/app_routes.dart';
+import '../../routes/etapa2_routes.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/onboarding_page_solid.dart';
 
@@ -16,7 +16,7 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
       onSkip: () {
-        Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
+        Navigator.of(context).pushNamed(Etapa2Routes.personalDetails);
       },
       showBrandHeader: false,
       footer: Padding(
@@ -31,7 +31,7 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
               height: (56 * scale).clamp(46, 70),
               child: FilledButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.homeProfileSetup);
+                  Navigator.of(context).pushNamed(Etapa2Routes.personalDetails);
                 },
                 style: FilledButton.styleFrom(
                   backgroundColor: AppTheme.primaryBlue,

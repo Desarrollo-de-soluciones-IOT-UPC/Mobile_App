@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
+import '../../routes/etapa2_routes.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/onboarding_page_solid.dart';
 
@@ -19,7 +20,7 @@ class OnboardingSmartAlertsScreen extends StatelessWidget {
     return OnboardingPageSolid(
       background: AppTheme.darkNavy,
       onSkip: () {
-        Navigator.of(context).pushNamed(AppRoutes.onboardingFinalStep);
+        Navigator.of(context).pushNamed(Etapa2Routes.personalDetails);
       },
       footer: Padding(
         padding: EdgeInsets.fromLTRB(sidePadding, 0, sidePadding, sidePadding),
