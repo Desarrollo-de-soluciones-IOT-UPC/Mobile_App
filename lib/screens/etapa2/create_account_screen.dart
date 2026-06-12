@@ -57,12 +57,17 @@ class CreateAccountScreen extends StatelessWidget {
                               color: const Color(0x0D161B22),
                               borderRadius: BorderRadius.circular(16 * scale),
                               border: Border.all(
-                                color: const Color.fromRGBO(140, 144, 161, 0.15),
+                                color: const Color.fromRGBO(
+                                  140,
+                                  144,
+                                  161,
+                                  0.15,
+                                ),
                                 width: 1.2,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.4),
+                                  color: Colors.black.withValues(alpha: 0.4),
                                   blurRadius: 40 * scale,
                                   offset: Offset(0, 20 * scale),
                                 ),
@@ -138,15 +143,19 @@ class CreateAccountScreen extends StatelessWidget {
                                     height: 56 * scale,
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        Navigator.of(context)
-                                            .pushNamed('/etapa2/login');
+                                        Navigator.of(
+                                          context,
+                                        ).pushNamed('/etapa2/login');
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFF5B8CFF),
+                                        backgroundColor: const Color(
+                                          0xFF5B8CFF,
+                                        ),
                                         elevation: 0,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8 * scale),
+                                          borderRadius: BorderRadius.circular(
+                                            8 * scale,
+                                          ),
                                         ),
                                       ),
                                       child: Text(
@@ -260,7 +269,7 @@ class _FieldBlock extends StatelessWidget {
   }
 }
 
-class _PasswordBlock extends StatelessWidget {
+class _PasswordBlock extends StatefulWidget {
   const _PasswordBlock({
     required this.label,
     required this.hintText,
@@ -274,55 +283,73 @@ class _PasswordBlock extends StatelessWidget {
   final bool showStrength;
 
   @override
+  State<_PasswordBlock> createState() => _PasswordBlockState();
+}
+
+class _PasswordBlockState extends State<_PasswordBlock> {
+  bool _obscurePassword = true;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          widget.label,
           style: TextStyle(
             fontFamily: 'JetBrains Mono',
             fontWeight: FontWeight.w500,
-            fontSize: 12 * scale,
+            fontSize: 12 * widget.scale,
             height: 16 / (12),
             color: const Color(0xFFC2C6D8),
           ),
         ),
-        SizedBox(height: 4 * scale),
+        SizedBox(height: 4 * widget.scale),
         TextFormField(
-          obscureText: true,
+          obscureText: _obscurePassword,
           style: const TextStyle(
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
             color: Colors.white,
           ),
           decoration: InputDecoration(
-            hintText: hintText,
+            hintText: widget.hintText,
             hintStyle: TextStyle(
               color: const Color(0xFF8C90A1),
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
-              fontSize: 16 * scale,
+              fontSize: 16 * widget.scale,
             ),
             filled: true,
             fillColor: const Color(0xFF0B0E16),
             contentPadding: EdgeInsets.symmetric(
-              vertical: 18 * scale,
-              horizontal: 16 * scale,
+              vertical: 18 * widget.scale,
+              horizontal: 16 * widget.scale,
             ),
-            suffixIcon: const Icon(
-              Icons.lock_outline,
-              color: Color(0xFF8C90A1),
+            suffixIcon: IconButton(
+              tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+              onPressed: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+              icon: Icon(
+                _obscurePassword
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                color: const Color(0xFF8C90A1),
+                size: 20 * widget.scale,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6 * scale),
+              borderRadius: BorderRadius.circular(6 * widget.scale),
               borderSide: const BorderSide(
                 color: Color.fromRGBO(66, 70, 85, 0.35),
                 width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6 * scale),
+              borderRadius: BorderRadius.circular(6 * widget.scale),
               borderSide: const BorderSide(
                 color: Color.fromRGBO(91, 140, 255, 1),
                 width: 1.2,
@@ -331,18 +358,18 @@ class _PasswordBlock extends StatelessWidget {
           ),
         ),
 
-        if (showStrength) ...[
-          SizedBox(height: 8 * scale),
+        if (widget.showStrength) ...[
+          SizedBox(height: 8 * widget.scale),
           SizedBox(
-            height: 6 * scale,
+            height: 6 * widget.scale,
             child: Row(
               children: [
                 _StrengthPill(color: const Color(0xFF65DAFF), radius: 12),
-                SizedBox(width: 6 * scale),
+                SizedBox(width: 6 * widget.scale),
                 _StrengthPill(color: const Color(0xFF65DAFF), radius: 12),
-                SizedBox(width: 6 * scale),
+                SizedBox(width: 6 * widget.scale),
                 _StrengthPill(color: const Color(0xFF65DAFF), radius: 12),
-                SizedBox(width: 6 * scale),
+                SizedBox(width: 6 * widget.scale),
                 _StrengthPill(
                   color: const Color.fromRGBO(101, 218, 255, 0.2),
                   radius: 12,
@@ -357,10 +384,7 @@ class _PasswordBlock extends StatelessWidget {
 }
 
 class _StrengthPill extends StatelessWidget {
-  const _StrengthPill({
-    required this.color,
-    required this.radius,
-  });
+  const _StrengthPill({required this.color, required this.radius});
 
   final Color color;
   final double radius;
@@ -464,4 +488,3 @@ class _TermsAndFooter extends StatelessWidget {
     );
   }
 }
-
