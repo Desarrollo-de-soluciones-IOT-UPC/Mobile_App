@@ -89,7 +89,6 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 
   assets:
-    - assets/etapa_1_figma/
     - assets/IMG_ETAPA_1/
 
 

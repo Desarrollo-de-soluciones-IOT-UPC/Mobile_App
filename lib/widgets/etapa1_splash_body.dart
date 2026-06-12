@@ -10,9 +10,28 @@ class Etapa1SplashBody extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.asset(
-          'assets/etapa_1_figma/1.Splash Screen - Official Brand.png',
-          fit: BoxFit.cover,
+        const DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0B0F19),
+                Color(0xFF101C2E),
+              ],
+            ),
+          ),
+        ),
+        Center(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: Image.asset(
+              'assets/IMG_ETAPA_1/logo.jpeg',
+              width: 140,
+              height: 140,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
         SafeArea(
           child: Padding(
