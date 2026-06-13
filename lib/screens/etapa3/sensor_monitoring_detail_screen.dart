@@ -36,7 +36,7 @@ class SensorMonitoringDetailScreen extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
-                childAspectRatio: compact ? 2.6 : 1.28,
+                childAspectRatio: compact ? 2.35 : 1.08,
                 children: const [
                   MetricTile(
                     icon: Icons.battery_charging_full_outlined,

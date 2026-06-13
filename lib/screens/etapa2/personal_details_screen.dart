@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../routes/etapa2_routes.dart';
 import '../../services/onboarding_flow_store.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/emsafe_page_indicator.dart';
 
 class PersonalDetailsScreen extends StatefulWidget {
   const PersonalDetailsScreen({super.key});
@@ -154,6 +156,10 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                                 label: 'Phone',
                                 icon: Icons.phone_outlined,
                                 keyboardType: TextInputType.phone,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                validator: _numericValidator,
                                 textInputAction: TextInputAction.next,
                               ),
                             ],
@@ -187,7 +193,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
                     ),
                   ),
                 ),
-                _SwipeFooter(onComplete: _continueToCreateAccount),
+                _DetailsFooter(onContinue: _continueToCreateAccount),
               ],
             ),
           ),
@@ -213,22 +219,6 @@ class _PersonalHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: AppTheme.primaryCyan.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: AppTheme.primaryCyan.withValues(alpha: 0.25),
-            ),
-          ),
-          child: const Icon(
-            Icons.assignment_ind_outlined,
-            color: AppTheme.primaryCyan,
-          ),
-        ),
-        const SizedBox(width: 12),
         const Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,6 +324,8 @@ class _CompanyFields extends StatelessWidget {
           label: 'RUC',
           icon: Icons.pin_outlined,
           keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          validator: _numericValidator,
           textInputAction: TextInputAction.next,
         ),
         _InputField(
@@ -372,6 +364,8 @@ class _IndividualFields extends StatelessWidget {
           label: 'DNI',
           icon: Icons.pin_outlined,
           keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          validator: _numericValidator,
           textInputAction: TextInputAction.next,
         ),
       ],
@@ -423,6 +417,7 @@ class _InputField extends StatelessWidget {
     this.keyboardType,
     this.validator,
     this.textInputAction,
+    this.inputFormatters,
   });
 
   final TextEditingController controller;
@@ -431,6 +426,7 @@ class _InputField extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -438,6 +434,7 @@ class _InputField extends StatelessWidget {
       controller: controller,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
+      inputFormatters: inputFormatters,
       style: const TextStyle(color: Colors.white, fontSize: 15),
       validator: validator ?? _requiredValidator,
       decoration: InputDecoration(
@@ -476,17 +473,17 @@ class _InputField extends StatelessWidget {
   }
 }
 
-class _SwipeFooter extends StatefulWidget {
-  const _SwipeFooter({required this.onComplete});
-
-  final VoidCallback onComplete;
-
-  @override
-  State<_SwipeFooter> createState() => _SwipeFooterState();
+String? _numericValidator(String? value) {
+  final text = value?.trim() ?? '';
+  if (text.isEmpty) return 'Required field';
+  if (!RegExp(r'^\d+$').hasMatch(text)) return 'Use numbers only';
+  return null;
 }
 
-class _SwipeFooterState extends State<_SwipeFooter> {
-  double _drag = 0;
+class _DetailsFooter extends StatelessWidget {
+  const _DetailsFooter({required this.onContinue});
+
+  final VoidCallback onContinue;
 
   @override
   Widget build(BuildContext context) {
@@ -496,73 +493,27 @@ class _SwipeFooterState extends State<_SwipeFooter> {
         color: AppTheme.cardBg.withValues(alpha: 0.92),
         border: const Border(top: BorderSide(color: AppTheme.cardBorder)),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const knobSize = 48.0;
-          final maxDrag = (constraints.maxWidth - knobSize - 8).clamp(
-            0.0,
-            500.0,
-          );
-          final knobLeft = _drag.clamp(0.0, maxDrag);
-
-          return GestureDetector(
-            onTap: widget.onComplete,
-            onHorizontalDragUpdate: (details) {
-              setState(() {
-                _drag = (_drag + details.delta.dx).clamp(0.0, maxDrag);
-              });
-            },
-            onHorizontalDragEnd: (_) {
-              if (_drag > maxDrag * 0.68) {
-                widget.onComplete();
-              }
-              setState(() => _drag = 0);
-            },
-            child: Container(
-              height: 58,
-              decoration: BoxDecoration(
-                color: const Color(0xFF0B0E16),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: AppTheme.primaryBlue.withValues(alpha: 0.26),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const EmsafePageIndicator(count: 2, activeIndex: 0),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            height: 54,
+            child: FilledButton(
+              onPressed: onContinue,
+              style: FilledButton.styleFrom(
+                backgroundColor: AppTheme.primaryBlue,
+                foregroundColor: const Color(0xFF002B73),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Text(
-                    'Swipe to create account',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.72),
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Positioned(
-                    left: 5 + knobLeft,
-                    child: Container(
-                      width: knobSize,
-                      height: knobSize,
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryBlue,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.primaryBlue.withValues(alpha: 0.28),
-                            blurRadius: 18,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.arrow_forward,
-                        color: Color(0xFF002B73),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              child: const Text('Continue to Create Account'),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }

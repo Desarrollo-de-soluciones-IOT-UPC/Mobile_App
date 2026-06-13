@@ -8,7 +8,7 @@ class DashboardOverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Etapa3Shell(
-      title: 'Dashboard',
+      title: 'EMSAFE',
       subtitle: 'Radiation exposure monitoring live',
       selectedIndex: 0,
       trailing: const StatusPill(label: 'SAFE', color: Etapa3Palette.cyan),

@@ -72,7 +72,8 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
           ],
         ),
       ),
-      child: Padding(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -80,7 +81,6 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
             SizedBox(height: (10 * scale).clamp(6, 18)),
             Text(
               'Searching for Sensors',
-
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
@@ -99,12 +99,13 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
                 height: 1.6,
               ),
             ),
-            SizedBox(height: (24 * scale).clamp(16, 40)),
+            SizedBox(height: (20 * scale).clamp(14, 30)),
             _buildRadar(scale: scale),
-            SizedBox(height: (16 * scale).clamp(10, 30)),
+            SizedBox(height: (14 * scale).clamp(10, 24)),
             _buildStatus(scale: scale),
-            SizedBox(height: (18 * scale).clamp(10, 30)),
-            Expanded(child: _buildSensorQueue(scale: scale)),
+            SizedBox(height: (16 * scale).clamp(10, 24)),
+            _buildSensorQueue(scale: scale),
+            SizedBox(height: (12 * scale).clamp(8, 20)),
           ],
         ),
       ),
@@ -113,7 +114,7 @@ class _PairingSensorsScreenState extends State<PairingSensorsScreen>
 
   Widget _buildRadar({required double scale}) {
     final double pulse = (280 * scale).clamp(200, 360);
-    final double radarBox = (326.22 * scale).clamp(260, 420);
+    final double radarBox = (270 * scale).clamp(210, 320);
 
     return SizedBox(
       height: radarBox,

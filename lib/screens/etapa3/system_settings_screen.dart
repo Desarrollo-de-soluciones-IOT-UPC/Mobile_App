@@ -13,7 +13,6 @@ class _SystemSettingsScreenState extends State<SystemSettingsScreen> {
   bool pushAlerts = true;
   bool autoCalibrate = true;
   bool cloudSync = false;
-  double threshold = 72;
 
   @override
   Widget build(BuildContext context) {
@@ -30,64 +29,6 @@ class _SystemSettingsScreenState extends State<SystemSettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _ProfileCard(),
-          const SizedBox(height: 20),
-          const SectionLabel('SAFETY THRESHOLD'),
-          const SizedBox(height: 10),
-          GlassPanel(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Expanded(
-                      child: Text(
-                        'Alert limit',
-                        style: TextStyle(
-                          color: Etapa3Palette.text,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    StatusPill(
-                      label: '${threshold.round()} uW/m2',
-                      color: Etapa3Palette.cyan,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'EmSafe will notify you when exposure exceeds this value.',
-                  style: TextStyle(
-                    color: Etapa3Palette.muted,
-                    fontSize: 12,
-                    height: 1.35,
-                  ),
-                ),
-                const SizedBox(height: 18),
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: Etapa3Palette.cyan,
-                    inactiveTrackColor: const Color(0xFF32343E),
-                    thumbColor: Etapa3Palette.cyan,
-                    overlayColor: Etapa3Palette.cyan.withValues(alpha: 0.12),
-                    trackHeight: 6,
-                  ),
-                  child: Slider(
-                    value: threshold,
-                    min: 20,
-                    max: 100,
-                    divisions: 16,
-                    onChanged: (value) {
-                      setState(() {
-                        threshold = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
           const SizedBox(height: 20),
           const SectionLabel('PREFERENCES'),
           const SizedBox(height: 10),

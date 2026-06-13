@@ -26,7 +26,7 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
 
     final double leftPad = (24 * scale).clamp(16, 28);
     final double rightPad = (24 * scale).clamp(16, 28);
-    final double topPad = (57 * scale).clamp(32, 90);
+    final double topPad = (36 * scale).clamp(20, 58);
 
     final double pageWidth = (bentoWidth + 2 * 24 * scale).clamp(
       320,
@@ -153,7 +153,7 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
                         (40 * scale).clamp(20, 48),
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Row(
@@ -192,6 +192,8 @@ class SplashEmSafeUpdatedScreen extends StatelessWidget {
                           ),
                           SizedBox(height: (12 * scale).clamp(8, 16)),
                           Wrap(
+                            alignment: WrapAlignment.center,
+                            runAlignment: WrapAlignment.center,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               Padding(

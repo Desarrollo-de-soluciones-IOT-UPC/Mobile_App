@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../routes/app_routes.dart';
 import '../../routes/etapa2_routes.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/emsafe_page_indicator.dart';
 import '../../widgets/onboarding_page_solid.dart';
 
 class OnboardingAstraAIAssistantScreen extends StatelessWidget {
@@ -27,7 +28,11 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildProgressBar(activeIndex: 1, scale: scale),
+            EmsafePageIndicator(
+              count: 3,
+              activeIndex: 1,
+              onTap: (index) => _goToOnboardingPage(context, index),
+            ),
             SizedBox(height: (22 * scale).clamp(16, 30)),
             SizedBox(
               width: double.infinity,
@@ -99,6 +104,16 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _goToOnboardingPage(BuildContext context, int index) {
+    final routes = [
+      AppRoutes.onboardingSmartAlerts,
+      AppRoutes.onboardingAstraAssistant,
+      AppRoutes.onboardingSmartHomeProtection,
+    ];
+    if (index == 1) return;
+    Navigator.of(context).pushReplacementNamed(routes[index]);
   }
 
   Widget _buildMediaCard({required double scale}) {
@@ -187,36 +202,6 @@ class OnboardingAstraAIAssistantScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildProgressBar({required int activeIndex, required double scale}) {
-    final double activeW = (40 * scale).clamp(24, 50);
-    final double inactiveW = (8 * scale).clamp(6, 16);
-    final double h = (6 * scale).clamp(4, 10);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(4, (index) {
-        final bool active = index == activeIndex;
-        return Container(
-          width: active ? activeW : inactiveW,
-          height: h,
-          margin: EdgeInsets.symmetric(horizontal: (4 * scale).clamp(2, 8)),
-          decoration: BoxDecoration(
-            color: active ? AppTheme.primaryBlue : Colors.white12,
-            borderRadius: BorderRadius.circular(99),
-            boxShadow: active
-                ? [
-                    BoxShadow(
-                      color: AppTheme.primaryBlue.withValues(alpha: 0.45),
-                      blurRadius: (10 * scale).clamp(6, 16),
-                    ),
-                  ]
-                : null,
-          ),
-        );
-      }),
     );
   }
 }

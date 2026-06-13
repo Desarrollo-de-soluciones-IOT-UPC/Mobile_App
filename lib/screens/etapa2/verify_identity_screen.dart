@@ -17,6 +17,7 @@ class VerifyIdentityScreen extends StatefulWidget {
 class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
   final _otpController = TextEditingController();
   final _focusNode = FocusNode();
+  String? _errorText;
 
   @override
   void initState() {
@@ -245,7 +246,9 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                                                       .digitsOnly, // <- Seguridad extra
                                                 ],
                                                 onChanged: (v) {
-                                                  setState(() {});
+                                                  setState(() {
+                                                    _errorText = null;
+                                                  });
                                                 },
                                                 style: const TextStyle(
                                                   fontSize: 1,
@@ -301,6 +304,20 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                                   ),
 
                                   SizedBox(height: 18 * scale),
+                                  if (_errorText != null) ...[
+                                    Center(
+                                      child: Text(
+                                        _errorText!,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: const Color(0xFFEF4444),
+                                          fontSize: 13 * scale,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10 * scale),
+                                  ],
 
                                   // Verify button
                                   SizedBox(
@@ -308,6 +325,14 @@ class _VerifyIdentityScreenState extends State<VerifyIdentityScreen> {
                                     height: 56 * scale,
                                     child: ElevatedButton(
                                       onPressed: () {
+                                        if (_otpController.text.length != 6) {
+                                          setState(() {
+                                            _errorText =
+                                                'Enter the complete 6-digit code';
+                                          });
+                                          _focusNode.requestFocus();
+                                          return;
+                                        }
                                         Navigator.of(context).pushNamed(
                                           Etapa2Routes.verificationSuccess,
                                         );

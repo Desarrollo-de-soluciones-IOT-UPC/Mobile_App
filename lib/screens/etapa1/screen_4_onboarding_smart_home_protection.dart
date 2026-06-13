@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../routes/app_routes.dart';
 import '../../routes/etapa2_routes.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/emsafe_page_indicator.dart';
 import '../../widgets/onboarding_page_solid.dart';
 
 class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
@@ -24,7 +26,11 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildProgressBar(activeIndex: 2, scale: scale),
+            EmsafePageIndicator(
+              count: 3,
+              activeIndex: 2,
+              onTap: (index) => _goToOnboardingPage(context, index),
+            ),
             SizedBox(height: (22 * scale).clamp(16, 32)),
             SizedBox(
               width: double.infinity,
@@ -86,6 +92,16 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _goToOnboardingPage(BuildContext context, int index) {
+    final routes = [
+      AppRoutes.onboardingSmartAlerts,
+      AppRoutes.onboardingAstraAssistant,
+      AppRoutes.onboardingSmartHomeProtection,
+    ];
+    if (index == 2) return;
+    Navigator.of(context).pushReplacementNamed(routes[index]);
   }
 
   Widget _buildHeroBentoGrid({required double scale}) {
@@ -291,24 +307,6 @@ class OnboardingSmartHomeProtectionScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildProgressBar({required int activeIndex, required double scale}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(4, (index) {
-        final bool active = index == activeIndex;
-        return Container(
-          width: active ? 28 * scale : 10 * scale,
-          height: 6 * scale,
-          margin: EdgeInsets.symmetric(horizontal: 4 * scale),
-          decoration: BoxDecoration(
-            color: active ? AppTheme.primaryBlue : Colors.white12,
-            borderRadius: BorderRadius.circular(99),
-          ),
-        );
-      }),
     );
   }
 }
