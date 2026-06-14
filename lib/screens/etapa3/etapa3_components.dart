@@ -19,6 +19,104 @@ class Etapa3Palette {
   static const red = Color(0xFFFF5B6E);
 }
 
+/// Maps a backend radiation level ("safe" | "caution" | "danger") to a color.
+Color etapa3LevelColor(String? level) {
+  switch (level) {
+    case 'danger':
+      return Etapa3Palette.red;
+    case 'caution':
+      return Etapa3Palette.amber;
+    case 'safe':
+      return Etapa3Palette.green;
+    default:
+      return Etapa3Palette.cyan;
+  }
+}
+
+/// Uppercase label for a backend radiation level.
+String etapa3LevelLabel(String? level) {
+  switch (level) {
+    case 'danger':
+      return 'DANGER';
+    case 'caution':
+      return 'CAUTION';
+    case 'safe':
+      return 'SAFE';
+    default:
+      return (level ?? 'UNKNOWN').toUpperCase();
+  }
+}
+
+/// Formats a nullable reading value for display.
+String etapa3Num(double? value, {int decimals = 2}) {
+  if (value == null) return '--';
+  return value.toStringAsFixed(decimals);
+}
+
+/// Unit shown next to radiation values across the app.
+const String etapa3Unit = 'µT/m²';
+
+/// Centered loading spinner used inside Etapa3Shell while data loads.
+class Etapa3Loading extends StatelessWidget {
+  const Etapa3Loading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.only(top: 120),
+      child: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Etapa3Palette.cyan),
+        ),
+      ),
+    );
+  }
+}
+
+/// Error panel with a retry button, used inside Etapa3Shell on load failure.
+class Etapa3Error extends StatelessWidget {
+  const Etapa3Error({super.key, required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 60),
+      child: GlassPanel(
+        padding: const EdgeInsets.all(22),
+        child: Column(
+          children: [
+            const Icon(Icons.cloud_off_outlined,
+                color: Etapa3Palette.red, size: 40),
+            const SizedBox(height: 14),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Etapa3Palette.muted,
+                fontSize: 13,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 18),
+            OutlinedButton.icon(
+              onPressed: onRetry,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Etapa3Palette.cyan,
+                side: const BorderSide(color: Etapa3Palette.stroke),
+              ),
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class Etapa3Shell extends StatelessWidget {
   const Etapa3Shell({
     super.key,

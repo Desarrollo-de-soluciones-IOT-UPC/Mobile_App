@@ -3,11 +3,61 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../routes/etapa2_routes.dart';
+import '../../routes/etapa3_routes.dart';
+import '../../services/api_client.dart';
+import '../../services/client_api.dart';
 
-/// Login (Etapa 2)
+/// Login (Etapa 2) — now wired to the real backend (/api/auth/login).
 /// Responsive + compacto y fiel a Figma (sin alturas rígidas).
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signIn() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _error = 'Enter your email and password.');
+      return;
+    }
+
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    try {
+      await ClientApi.login(email, password);
+      if (!mounted) return;
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Etapa3Routes.dashboardOverview, (route) => false);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() => _error = e.message);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _error = 'Something went wrong. Please try again.');
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +95,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      // Deja que crezca el contenido, pero evita layouts que
-                      // dependan de alturas rígidas.
                       minHeight: constraints.maxHeight - (48 * scale),
                     ),
                     child: Center(
@@ -110,9 +158,10 @@ class LoginScreen extends StatelessWidget {
                                     // --- Inputs reales ---
                                     _FieldBlock(
                                       label: 'EMAIL ADDRESS',
-                                      hintText: 'alex.vance@tech.com',
+                                      hintText: 'ops@quantumdyn.com',
                                       suffixIcon: Icons.mail_outline,
                                       isEmail: true,
+                                      controller: _emailController,
                                     ),
                                     SizedBox(height: 20 * scale),
                                     _FieldBlock(
@@ -120,23 +169,63 @@ class LoginScreen extends StatelessWidget {
                                       hintText: '••••••••••••••',
                                       suffixIcon: Icons.lock_outline,
                                       isPassword: true,
+                                      controller: _passwordController,
+                                      onSubmitted: (_) => _signIn(),
                                     ),
+
+                                    // Mensaje de error
+                                    if (_error != null) ...[
+                                      SizedBox(height: 16 * scale),
+                                      Container(
+                                        width: double.infinity,
+                                        padding: EdgeInsets.all(12 * scale),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromRGBO(
+                                              255, 91, 110, 0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(8 * scale),
+                                          border: Border.all(
+                                            color: const Color.fromRGBO(
+                                                255, 91, 110, 0.4),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.error_outline,
+                                              color: Color(0xFFFF5B6E),
+                                              size: 18,
+                                            ),
+                                            SizedBox(width: 10 * scale),
+                                            Expanded(
+                                              child: Text(
+                                                _error!,
+                                                style: TextStyle(
+                                                  color: const Color(0xFFFFB3BC),
+                                                  fontFamily: 'Inter',
+                                                  fontSize: 13 * scale,
+                                                  height: 1.35,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                     SizedBox(height: 24 * scale),
 
-                                    // Botón principal -> OTP
+                                    // Botón principal -> login real
                                     SizedBox(
                                       width: double.infinity,
                                       height: 56 * scale,
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pushNamed(
-                                            '/etapa2/verify-identity',
-                                          );
-                                        },
+                                        onPressed: _loading ? null : _signIn,
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: const Color(
                                             0xFF5B8CFF,
                                           ),
+                                          disabledBackgroundColor:
+                                              const Color(0xFF35527F),
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(
@@ -144,15 +233,29 @@ class LoginScreen extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        child: Text(
-                                          'Sign In',
-                                          style: TextStyle(
-                                            fontFamily: 'Sora',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 16 * scale,
-                                            color: const Color(0xFF002565),
-                                          ),
-                                        ),
+                                        child: _loading
+                                            ? const SizedBox(
+                                                width: 22,
+                                                height: 22,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2.4,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Color(0xFF002565),
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                'Sign In',
+                                                style: TextStyle(
+                                                  fontFamily: 'Sora',
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 16 * scale,
+                                                  color: const Color(0xFF002565),
+                                                ),
+                                              ),
                                       ),
                                     ),
                                     SizedBox(height: 20 * scale),
@@ -302,15 +405,19 @@ class _FieldBlock extends StatefulWidget {
     required this.label,
     required this.hintText,
     required this.suffixIcon,
+    required this.controller,
     this.isEmail = false,
     this.isPassword = false,
+    this.onSubmitted,
   });
 
   final String label;
   final String hintText;
   final IconData suffixIcon;
+  final TextEditingController controller;
   final bool isEmail;
   final bool isPassword;
+  final ValueChanged<String>? onSubmitted;
 
   @override
   State<_FieldBlock> createState() => _FieldBlockState();
@@ -321,8 +428,6 @@ class _FieldBlockState extends State<_FieldBlock> {
 
   @override
   Widget build(BuildContext context) {
-    // Usamos el scale implícito del layout con Theme/MediaQuery, pero
-    // manteniendo tipografías razonables (evitamos multiplicar TODO).
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -337,10 +442,14 @@ class _FieldBlockState extends State<_FieldBlock> {
         ),
         const SizedBox(height: 6),
         TextFormField(
+          controller: widget.controller,
           obscureText: widget.isPassword && _obscurePassword,
           keyboardType: widget.isEmail
               ? TextInputType.emailAddress
               : TextInputType.text,
+          textInputAction:
+              widget.isPassword ? TextInputAction.done : TextInputAction.next,
+          onFieldSubmitted: widget.onSubmitted,
           style: const TextStyle(
             color: Colors.white,
             fontFamily: 'Inter',
