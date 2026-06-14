@@ -1,9 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '../../models/client_models.dart';
+import '../../services/api_client.dart';
+import '../../services/client_api.dart';
 import 'etapa3_components.dart';
 
-class AlertHistoryScreen extends StatelessWidget {
+class AlertHistoryScreen extends StatefulWidget {
   const AlertHistoryScreen({super.key});
+
+  @override
+  State<AlertHistoryScreen> createState() => _AlertHistoryScreenState();
+}
+
+class _AlertHistoryScreenState extends State<AlertHistoryScreen> {
+  late Future<List<ClientAlert>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = ClientApi.alerts();
+  }
+
+  void _reload() {
+    setState(() => _future = ClientApi.alerts());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,87 +32,89 @@ class AlertHistoryScreen extends StatelessWidget {
       subtitle: 'Review exposure events and status changes',
       selectedIndex: 2,
       trailing: IconButton(
-        tooltip: 'Filter alerts',
-        onPressed: () {},
+        tooltip: 'Refresh',
+        onPressed: _reload,
         style: IconButton.styleFrom(
           backgroundColor: Etapa3Palette.panel,
           foregroundColor: Etapa3Palette.blue,
           side: const BorderSide(color: Etapa3Palette.stroke),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        icon: const Icon(Icons.filter_list),
+        icon: const Icon(Icons.refresh),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          _AlertSummary(),
-          SizedBox(height: 18),
-          _FilterRow(),
-          SizedBox(height: 18),
-          SectionLabel('TODAY'),
-          SizedBox(height: 10),
-          _AlertCard(
-            severity: 'High exposure',
-            location: 'Office sensor',
-            time: '10:42 AM',
-            value: '84.6 uW/m2',
-            description: 'Exposure passed your configured safety threshold.',
-            color: Etapa3Palette.red,
-            icon: Icons.warning_amber_rounded,
-          ),
-          SizedBox(height: 10),
-          _AlertCard(
-            severity: 'Signal recovered',
-            location: 'Bedroom sensor',
-            time: '09:18 AM',
-            value: 'Online',
-            description: 'Sensor reconnected after a short network drop.',
-            color: Etapa3Palette.green,
-            icon: Icons.wifi_tethering,
-          ),
-          SizedBox(height: 20),
-          SectionLabel('YESTERDAY'),
-          SizedBox(height: 10),
-          _AlertCard(
-            severity: 'Medium spike',
-            location: 'Living room',
-            time: '08:54 PM',
-            value: '51.2 uW/m2',
-            description: 'Short burst detected near entertainment devices.',
-            color: Etapa3Palette.amber,
-            icon: Icons.bolt,
-          ),
-          SizedBox(height: 10),
-          _AlertCard(
-            severity: 'Calibration complete',
-            location: 'Kitchen sensor',
-            time: '02:31 PM',
-            value: 'OK',
-            description: 'Baseline profile was updated successfully.',
-            color: Etapa3Palette.cyan,
-            icon: Icons.check_circle_outline,
-          ),
-          SizedBox(height: 10),
-          _AlertCard(
-            severity: 'Low battery',
-            location: 'Garage sensor',
-            time: '11:06 AM',
-            value: '18%',
-            description: 'Battery replacement recommended this week.',
-            color: Etapa3Palette.amber,
-            icon: Icons.battery_alert_outlined,
-          ),
-        ],
+      child: FutureBuilder<List<ClientAlert>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Etapa3Loading();
+          }
+          if (snapshot.hasError) {
+            final msg = snapshot.error is ApiException
+                ? (snapshot.error as ApiException).message
+                : 'Could not load alerts.';
+            return Etapa3Error(message: msg, onRetry: _reload);
+          }
+          return _buildList(snapshot.data!);
+        },
       ),
+    );
+  }
+
+  Widget _buildList(List<ClientAlert> alerts) {
+    final high = alerts.where((a) => a.level == 'danger').length;
+    final medium = alerts.where((a) => a.level == 'caution').length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _AlertSummary(total: alerts.length, high: high, medium: medium),
+        const SizedBox(height: 18),
+        const SectionLabel('EVENTS'),
+        const SizedBox(height: 10),
+        if (alerts.isEmpty)
+          const GlassPanel(
+            child: Row(
+              children: [
+                Icon(Icons.check_circle_outline,
+                    color: Etapa3Palette.green, size: 22),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'No alerts. All your sensors are within the safe range.',
+                    style: TextStyle(
+                      color: Etapa3Palette.muted,
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          for (final alert in alerts) ...[
+            _AlertCard(alert: alert),
+            const SizedBox(height: 10),
+          ],
+      ],
     );
   }
 }
 
 class _AlertSummary extends StatelessWidget {
-  const _AlertSummary();
+  const _AlertSummary({
+    required this.total,
+    required this.high,
+    required this.medium,
+  });
+
+  final int total;
+  final int high;
+  final int medium;
 
   @override
   Widget build(BuildContext context) {
+    final hasHigh = high > 0;
     return GlassPanel(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -104,35 +126,39 @@ class _AlertSummary extends StatelessWidget {
                 width: 52,
                 height: 52,
                 decoration: BoxDecoration(
-                  color: Etapa3Palette.red.withValues(alpha: 0.1),
+                  color: (hasHigh ? Etapa3Palette.red : Etapa3Palette.green)
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Etapa3Palette.red.withValues(alpha: 0.24),
+                    color: (hasHigh ? Etapa3Palette.red : Etapa3Palette.green)
+                        .withValues(alpha: 0.24),
                   ),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.notifications_active_outlined,
-                  color: Etapa3Palette.red,
+                  color: hasHigh ? Etapa3Palette.red : Etapa3Palette.green,
                   size: 27,
                 ),
               ),
               const SizedBox(width: 16),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '5 events logged',
-                      style: TextStyle(
+                      '$total event${total == 1 ? '' : 's'} logged',
+                      style: const TextStyle(
                         color: Etapa3Palette.text,
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Text(
-                      'One high priority alert needs review.',
-                      style: TextStyle(
+                      hasHigh
+                          ? '$high high priority alert${high == 1 ? '' : 's'} need review.'
+                          : 'No high priority alerts right now.',
+                      style: const TextStyle(
                         color: Etapa3Palette.muted,
                         fontSize: 13,
                         height: 1.35,
@@ -145,28 +171,28 @@ class _AlertSummary extends StatelessWidget {
           ),
           const SizedBox(height: 18),
           Row(
-            children: const [
+            children: [
               Expanded(
                 child: _SummaryStat(
                   label: 'High',
-                  value: '01',
+                  value: high.toString().padLeft(2, '0'),
                   color: Etapa3Palette.red,
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: _SummaryStat(
                   label: 'Medium',
-                  value: '02',
+                  value: medium.toString().padLeft(2, '0'),
                   color: Etapa3Palette.amber,
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: _SummaryStat(
-                  label: 'Resolved',
-                  value: '04',
-                  color: Etapa3Palette.green,
+                  label: 'Total',
+                  value: total.toString().padLeft(2, '0'),
+                  color: Etapa3Palette.cyan,
                 ),
               ),
             ],
@@ -223,81 +249,17 @@ class _SummaryStat extends StatelessWidget {
   }
 }
 
-class _FilterRow extends StatelessWidget {
-  const _FilterRow();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 38,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        children: const [
-          _FilterPill(label: 'All', selected: true),
-          _FilterPill(label: 'High'),
-          _FilterPill(label: 'Medium'),
-          _FilterPill(label: 'Resolved'),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterPill extends StatelessWidget {
-  const _FilterPill({required this.label, this.selected = false});
-
-  final String label;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = selected ? Etapa3Palette.cyan : Etapa3Palette.quiet;
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-        decoration: BoxDecoration(
-          color: selected
-              ? Etapa3Palette.cyan.withValues(alpha: 0.1)
-              : Etapa3Palette.panel,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: color.withValues(alpha: 0.28)),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: color,
-            fontSize: 12,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _AlertCard extends StatelessWidget {
-  const _AlertCard({
-    required this.severity,
-    required this.location,
-    required this.time,
-    required this.value,
-    required this.description,
-    required this.color,
-    required this.icon,
-  });
+  const _AlertCard({required this.alert});
 
-  final String severity;
-  final String location;
-  final String time;
-  final String value;
-  final String description;
-  final Color color;
-  final IconData icon;
+  final ClientAlert alert;
 
   @override
   Widget build(BuildContext context) {
+    final color = etapa3LevelColor(alert.level);
+    final icon = alert.level == 'danger'
+        ? Icons.warning_amber_rounded
+        : Icons.bolt;
     return GlassPanel(
       padding: const EdgeInsets.all(15),
       child: Row(
@@ -322,7 +284,7 @@ class _AlertCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        severity,
+                        alert.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -334,7 +296,7 @@ class _AlertCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      time,
+                      alert.time ?? '',
                       style: const TextStyle(
                         color: Etapa3Palette.quiet,
                         fontSize: 11,
@@ -345,7 +307,7 @@ class _AlertCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  location,
+                  alert.deviceName ?? 'Sensor',
                   style: const TextStyle(
                     color: Etapa3Palette.blue,
                     fontSize: 12,
@@ -354,7 +316,7 @@ class _AlertCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  description,
+                  alert.description,
                   style: const TextStyle(
                     color: Etapa3Palette.muted,
                     fontSize: 12,
@@ -362,7 +324,10 @@ class _AlertCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                StatusPill(label: value, color: color),
+                StatusPill(
+                  label: '${etapa3Num(alert.value)} $etapa3Unit',
+                  color: color,
+                ),
               ],
             ),
           ),

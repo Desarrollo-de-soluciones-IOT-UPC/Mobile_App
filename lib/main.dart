@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 
 import 'routes/app_routes.dart';
 import 'routes/etapa2_routes.dart';
+import 'routes/etapa3_routes.dart';
 import 'services/onboarding_flow_store.dart';
+import 'services/session_store.dart';
 import 'theme/app_theme.dart';
 import 'screens/etapa1/screen_7_pair_your_sensor.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final initialRoute = await OnboardingFlowStore.hasCreatedAccount()
-      ? Etapa2Routes.login
-      : AppRoutes.splash1;
+
+  // Already authenticated → go straight to the dashboard.
+  // Otherwise: returning user (account created) → login; brand-new user → splash.
+  final String initialRoute;
+  if (await SessionStore.isLoggedIn()) {
+    initialRoute = Etapa3Routes.dashboardOverview;
+  } else if (await OnboardingFlowStore.hasCreatedAccount()) {
+    initialRoute = Etapa2Routes.login;
+  } else {
+    initialRoute = AppRoutes.splash1;
+  }
+
   runApp(MyApp(initialRoute: initialRoute));
 }
 
