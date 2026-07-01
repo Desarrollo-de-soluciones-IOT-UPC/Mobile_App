@@ -398,7 +398,7 @@ class Stage3BottomNav extends StatelessWidget {
       (Icons.dashboard_outlined, 'Home', Etapa3Routes.dashboardOverview),
       (
         Icons.monitor_heart_outlined,
-        'Monitor',
+        'Vitals',
         Etapa3Routes.sensorMonitoringDetail,
       ),
       (Icons.notifications_none, 'Alerts', Etapa3Routes.alertHistory),
