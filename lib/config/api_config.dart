@@ -1,12 +1,28 @@
-/// Base URL for the EMSafe backend.
+import 'package:flutter/foundation.dart';
+
+/// Base URL for the EMSafe backend, resolved per environment:
 ///
-/// IMPORTANT (Android emulator): the emulator's `localhost` points to the
-/// emulator itself, NOT your PC. The host machine is reachable at 10.0.2.2,
-/// so the local backend (http://localhost:8080) is http://10.0.2.2:8080 here.
-///
-/// - Android emulator (default): http://10.0.2.2:8080/api
-/// - Physical device on same Wi-Fi: replace with your PC LAN IP, e.g. http://192.168.1.50:8080/api
-/// - Production (Azure): https://emsafe-backend-hmf7asgja0d0h4cr.centralus-01.azurewebsites.net/api
+/// - Debug (default): http://10.0.2.2:8080/api — the Android emulator reaches
+///   the host PC at 10.0.2.2 (its own `localhost` is the emulator itself).
+/// - Release: the Azure production backend.
+/// - Override for any build (e.g. physical device on the same Wi-Fi):
+///     flutter run --dart-define=API_BASE_URL=http://192.168.1.50:8080/api
 class ApiConfig {
-  static const String baseUrl = 'http://10.0.2.2:8080/api';
+  static const String _override = String.fromEnvironment('API_BASE_URL');
+
+  static const String _debugDefault = 'http://10.0.2.2:8080/api';
+  static const String _production =
+      'https://emsafe-backend-hmf7asgja0d0h4cr.centralus-01.azurewebsites.net/api';
+
+  static String get baseUrl {
+    if (_override.isNotEmpty) return _override;
+    return kReleaseMode ? _production : _debugDefault;
+  }
+
+  /// STOMP WebSocket endpoint, derived from [baseUrl]
+  /// (http://host/api → ws://host/ws, https → wss).
+  static String get wsUrl {
+    final base = baseUrl.replaceFirst(RegExp(r'/api/?$'), '');
+    return '${base.replaceFirst('https', 'wss').replaceFirst(RegExp('^http(?!s)'), 'ws')}/ws';
+  }
 }

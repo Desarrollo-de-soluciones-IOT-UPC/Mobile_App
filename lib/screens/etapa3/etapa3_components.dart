@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../routes/etapa3_routes.dart';
+import '../../services/app_i18n.dart';
 
 class Etapa3Palette {
   static const bg = Color(0xFF10131B);
@@ -53,8 +54,11 @@ String etapa3Num(double? value, {int decimals = 2}) {
   return value.toStringAsFixed(decimals);
 }
 
-/// Unit shown next to radiation values across the app.
-const String etapa3Unit = 'µT/m²';
+/// Unit shown next to radiation values across the app (microtesla, magnetic field).
+const String etapa3Unit = 'µT';
+
+/// Safe limit in µT (danger threshold, ICNIRP 50 Hz reference — same as backend/edge).
+const double etapa3SafetyThreshold = 200;
 
 /// Centered loading spinner used inside Etapa3Shell while data loads.
 class Etapa3Loading extends StatelessWidget {
@@ -395,14 +399,15 @@ class Stage3BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      (Icons.dashboard_outlined, 'Home', Etapa3Routes.dashboardOverview),
+      (Icons.dashboard_outlined, tr('nav_home'), Etapa3Routes.dashboardOverview),
+      (Icons.sensors, tr('nav_monitor'), Etapa3Routes.monitor),
       (
         Icons.monitor_heart_outlined,
-        'Vitals',
+        tr('nav_vitals'),
         Etapa3Routes.sensorMonitoringDetail,
       ),
-      (Icons.notifications_none, 'Alerts', Etapa3Routes.alertHistory),
-      (Icons.settings_outlined, 'Settings', Etapa3Routes.systemSettings),
+      (Icons.notifications_none, tr('nav_alerts'), Etapa3Routes.alertHistory),
+      (Icons.settings_outlined, tr('nav_settings'), Etapa3Routes.systemSettings),
     ];
 
     return ClipRRect(

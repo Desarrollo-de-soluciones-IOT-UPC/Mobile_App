@@ -1,270 +1,237 @@
 import 'package:flutter/material.dart';
 
+import '../../models/client_models.dart';
+import '../../services/app_i18n.dart';
+import '../../services/client_api.dart';
 import 'etapa3_components.dart';
 
-enum _HealthRiskLevel { low, moderate, high }
-
-class _HealthRiskInfo {
-  const _HealthRiskInfo({
-    required this.level,
-    required this.label,
-    required this.title,
-    required this.description,
-    required this.color,
-    required this.icon,
-  });
-
-  final _HealthRiskLevel level;
-  final String label;
-  final String title;
-  final String description;
-  final Color color;
-  final IconData icon;
-}
-
-class _RiskCategory {
-  const _RiskCategory({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.accent,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-  final Color accent;
-}
-
-class _HealthTip {
-  const _HealthTip({
-    required this.impact,
-    required this.action,
-    required this.reason,
-    required this.color,
-  });
-
-  final String impact;
-  final String action;
-  final String reason;
-  final Color color;
-}
-
-class _HealthTipsMock {
-  const _HealthTipsMock({
-    required this.currentRisk,
-    required this.summary,
-    required this.riskLevels,
-    required this.categories,
-    required this.tips,
-  });
-
-  final _HealthRiskInfo currentRisk;
-  final String summary;
-  final List<_HealthRiskInfo> riskLevels;
-  final List<_RiskCategory> categories;
-  final List<_HealthTip> tips;
-
-  static const current = _HealthTipsMock(
-    currentRisk: _HealthRiskInfo(
-      level: _HealthRiskLevel.moderate,
-      label: 'Riesgo moderado',
-      title: 'Tomar precauciones',
-      description:
-          'Hay exposición frecuente en tu entorno. Pequeños cambios diarios pueden reducir el riesgo.',
-      color: Etapa3Palette.amber,
-      icon: Icons.info_outline,
-    ),
-    summary:
-        'Tu entorno presenta un nivel moderado de exposición. Revisa estas recomendaciones para disminuir el riesgo.',
-    riskLevels: [
-      _HealthRiskInfo(
-        level: _HealthRiskLevel.low,
-        label: 'Bajo',
-        title: 'Exposición controlada',
-        description:
-            'Mantener hábitos preventivos y revisar alertas ocasionales.',
-        color: Etapa3Palette.green,
-        icon: Icons.check_circle_outline,
-      ),
-      _HealthRiskInfo(
-        level: _HealthRiskLevel.moderate,
-        label: 'Medio',
-        title: 'Tomar precauciones',
-        description: 'Reducir cercanía a fuentes activas y alternar descansos.',
-        color: Etapa3Palette.amber,
-        icon: Icons.shield_outlined,
-      ),
-      _HealthRiskInfo(
-        level: _HealthRiskLevel.high,
-        label: 'Alto',
-        title: 'Reducir exposición',
-        description: 'Alejarse de fuentes cercanas y revisar zonas frecuentes.',
-        color: Etapa3Palette.red,
-        icon: Icons.warning_amber_rounded,
-      ),
-    ],
-    categories: [
-      _RiskCategory(
-        icon: Icons.bedtime_outlined,
-        title: 'Sueño y descanso',
-        description:
-            'Dormir con el celular muy cerca puede aumentar la exposición durante varias horas seguidas.',
-        accent: Etapa3Palette.blue,
-      ),
-      _RiskCategory(
-        icon: Icons.phone_android_outlined,
-        title: 'Uso prolongado de dispositivos',
-        description:
-            'Usar equipos sin pausas mantiene la exposición cerca del cuerpo por más tiempo.',
-        accent: Etapa3Palette.cyan,
-      ),
-      _RiskCategory(
-        icon: Icons.router_outlined,
-        title: 'Routers y fuentes cercanas',
-        description:
-            'Permanecer junto a routers o equipos activos puede elevar la exposición diaria.',
-        accent: Etapa3Palette.amber,
-      ),
-      _RiskCategory(
-        icon: Icons.location_on_outlined,
-        title: 'Zonas de mayor radiación',
-        description:
-            'Algunas zonas frecuentes pueden acumular lecturas más altas que otras durante el día.',
-        accent: Etapa3Palette.red,
-      ),
-    ],
-    tips: [
-      _HealthTip(
-        impact: 'Alto impacto',
-        action: 'Mantén el celular alejado mientras duermes.',
-        reason: 'Reduce varias horas de exposición cercana durante la noche.',
-        color: Etapa3Palette.red,
-      ),
-      _HealthTip(
-        impact: 'Alto impacto',
-        action: 'Evita permanecer mucho tiempo cerca del router.',
-        reason: 'Alejarte unos metros disminuye la exposición continua.',
-        color: Etapa3Palette.red,
-      ),
-      _HealthTip(
-        impact: 'Medio impacto',
-        action:
-            'Reduce el uso continuo de dispositivos cuando el nivel sea alto.',
-        reason: 'Las pausas ayudan a limitar el tiempo total de exposición.',
-        color: Etapa3Palette.amber,
-      ),
-      _HealthTip(
-        impact: 'Medio impacto',
-        action: 'Revisa las alertas de exposición en zonas frecuentes.',
-        reason:
-            'Identificar patrones permite tomar mejores decisiones diarias.',
-        color: Etapa3Palette.amber,
-      ),
-      _HealthTip(
-        impact: 'Bajo impacto',
-        action: 'Activa recordatorios o pausas preventivas.',
-        reason: 'Pequeños hábitos sostenidos ayudan a mantener el riesgo bajo.',
-        color: Etapa3Palette.green,
-      ),
-    ],
-  );
-}
-
-class SensorMonitoringDetailScreen extends StatelessWidget {
+/// "Vitals" tab — electromagnetic health guidance.
+///
+/// The educational content (categories and tips) is static by design; the
+/// CURRENT RISK card is real: it derives from the client's dashboard level
+/// (safe → low, caution → moderate, danger → high). If the backend is not
+/// reachable the card falls back to "moderate" without blocking the content.
+class SensorMonitoringDetailScreen extends StatefulWidget {
   const SensorMonitoringDetailScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    const tipsData = _HealthTipsMock.current;
-
-    return Etapa3Shell(
-      title: 'Salud Electromagnética',
-      subtitle: 'Aprende a reducir tu exposición diaria y cuida tu bienestar.',
-      selectedIndex: 1,
-      child: const _HealthTipsContent(data: tipsData),
-    );
-  }
+  State<SensorMonitoringDetailScreen> createState() =>
+      _SensorMonitoringDetailScreenState();
 }
 
-class _HealthTipsContent extends StatelessWidget {
-  const _HealthTipsContent({required this.data});
+class _SensorMonitoringDetailScreenState
+    extends State<SensorMonitoringDetailScreen> {
+  String? _level; // backend level: safe | caution | danger
 
-  final _HealthTipsMock data;
+  @override
+  void initState() {
+    super.initState();
+    _loadLevel();
+  }
+
+  Future<void> _loadLevel() async {
+    try {
+      final ClientDashboard dash = await ClientApi.dashboard();
+      if (mounted) setState(() => _level = dash.level);
+    } catch (_) {
+      // Informational screen: keep the fallback risk if the API is offline.
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _RiskHero(risk: data.currentRisk),
-        const SizedBox(height: 18),
-        _SummaryCard(summary: data.summary, color: data.currentRisk.color),
-        const SizedBox(height: 20),
-        const SectionLabel('NIVELES DE RIESGO'),
-        const SizedBox(height: 10),
-        _RiskLevelWrap(levels: data.riskLevels),
-        const SizedBox(height: 20),
-        const SectionLabel('CATEGORIAS DE RIESGO'),
-        const SizedBox(height: 10),
-        _RiskCategoryGrid(categories: data.categories),
-        const SizedBox(height: 20),
-        const SectionLabel('RECOMENDACIONES PRIORIZADAS'),
-        const SizedBox(height: 10),
-        for (final tip in data.tips) ...[
-          _TipCard(tip: tip),
+    final risk = _RiskInfo.fromLevel(_level);
+
+    return Etapa3Shell(
+      title: tr('vit_title'),
+      subtitle: tr('vit_subtitle'),
+      selectedIndex: 2,
+      trailing: StatusPill(label: risk.label, color: risk.color),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SectionLabel(tr('vit_currentRisk')),
           const SizedBox(height: 10),
+          _CurrentRiskCard(risk: risk),
+          const SizedBox(height: 20),
+          SectionLabel(tr('vit_levels')),
+          const SizedBox(height: 10),
+          _RiskLevelRow(
+            color: Etapa3Palette.green,
+            icon: Icons.check_circle_outline,
+            label: tr('vit_lvLow'),
+            title: tr('vit_riskLowTitle'),
+            description: tr('vit_riskLowDesc'),
+            active: risk.tier == 0,
+          ),
+          const SizedBox(height: 10),
+          _RiskLevelRow(
+            color: Etapa3Palette.amber,
+            icon: Icons.shield_outlined,
+            label: tr('vit_lvMid'),
+            title: tr('vit_riskModTitle'),
+            description: tr('vit_riskModDesc'),
+            active: risk.tier == 1,
+          ),
+          const SizedBox(height: 10),
+          _RiskLevelRow(
+            color: Etapa3Palette.red,
+            icon: Icons.warning_amber_rounded,
+            label: tr('vit_lvHigh'),
+            title: tr('vit_riskHighTitle'),
+            description: tr('vit_riskHighDesc'),
+            active: risk.tier == 2,
+          ),
+          const SizedBox(height: 20),
+          SectionLabel(tr('vit_categories')),
+          const SizedBox(height: 10),
+          _CategoryTile(
+            icon: Icons.bedtime_outlined,
+            accent: Etapa3Palette.blue,
+            title: tr('vit_catSleep'),
+            description: tr('vit_catSleepDesc'),
+          ),
+          const SizedBox(height: 10),
+          _CategoryTile(
+            icon: Icons.phone_android_outlined,
+            accent: Etapa3Palette.cyan,
+            title: tr('vit_catDevices'),
+            description: tr('vit_catDevicesDesc'),
+          ),
+          const SizedBox(height: 10),
+          _CategoryTile(
+            icon: Icons.router_outlined,
+            accent: Etapa3Palette.amber,
+            title: tr('vit_catRouters'),
+            description: tr('vit_catRoutersDesc'),
+          ),
+          const SizedBox(height: 10),
+          _CategoryTile(
+            icon: Icons.location_on_outlined,
+            accent: Etapa3Palette.red,
+            title: tr('vit_catZones'),
+            description: tr('vit_catZonesDesc'),
+          ),
+          const SizedBox(height: 20),
+          SectionLabel(tr('vit_tips')),
+          const SizedBox(height: 10),
+          _TipTile(
+            impact: tr('vit_impactHigh'),
+            color: Etapa3Palette.red,
+            action: tr('vit_tip1'),
+            reason: tr('vit_tip1Why'),
+          ),
+          const SizedBox(height: 10),
+          _TipTile(
+            impact: tr('vit_impactHigh'),
+            color: Etapa3Palette.red,
+            action: tr('vit_tip2'),
+            reason: tr('vit_tip2Why'),
+          ),
+          const SizedBox(height: 10),
+          _TipTile(
+            impact: tr('vit_impactMid'),
+            color: Etapa3Palette.amber,
+            action: tr('vit_tip3'),
+            reason: tr('vit_tip3Why'),
+          ),
+          const SizedBox(height: 10),
+          _TipTile(
+            impact: tr('vit_impactMid'),
+            color: Etapa3Palette.amber,
+            action: tr('vit_tip4'),
+            reason: tr('vit_tip4Why'),
+          ),
+          const SizedBox(height: 10),
+          _TipTile(
+            impact: tr('vit_impactLow'),
+            color: Etapa3Palette.green,
+            action: tr('vit_tip5'),
+            reason: tr('vit_tip5Why'),
+          ),
         ],
-      ],
+      ),
     );
   }
 }
 
-class _RiskHero extends StatelessWidget {
-  const _RiskHero({required this.risk});
+/// The current health-risk tier, mapped from the backend radiation level.
+class _RiskInfo {
+  _RiskInfo(this.tier, this.label, this.title, this.description, this.summary,
+      this.color, this.icon);
 
-  final _HealthRiskInfo risk;
+  final int tier; // 0 low, 1 moderate, 2 high
+  final String label;
+  final String title;
+  final String description;
+  final String summary;
+  final Color color;
+  final IconData icon;
+
+  factory _RiskInfo.fromLevel(String? level) {
+    switch (level) {
+      case 'safe':
+        return _RiskInfo(0, tr('vit_riskLow'), tr('vit_riskLowTitle'),
+            tr('vit_riskLowDesc'), tr('vit_summaryLow'), Etapa3Palette.green,
+            Icons.check_circle_outline);
+      case 'danger':
+        return _RiskInfo(2, tr('vit_riskHigh'), tr('vit_riskHighTitle'),
+            tr('vit_riskHighDesc'), tr('vit_summaryHigh'), Etapa3Palette.red,
+            Icons.warning_amber_rounded);
+      case 'caution':
+      default:
+        return _RiskInfo(1, tr('vit_riskMod'), tr('vit_riskModTitle'),
+            tr('vit_riskModDesc'), tr('vit_summaryMod'), Etapa3Palette.amber,
+            Icons.info_outline);
+    }
+  }
+}
+
+class _CurrentRiskCard extends StatelessWidget {
+  const _CurrentRiskCard({required this.risk});
+
+  final _RiskInfo risk;
 
   @override
   Widget build(BuildContext context) {
     return GlassPanel(
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                width: 58,
-                height: 58,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
                   color: risk.color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: risk.color.withValues(alpha: 0.24)),
+                  borderRadius: BorderRadius.circular(10),
+                  border:
+                      Border.all(color: risk.color.withValues(alpha: 0.26)),
                 ),
-                child: Icon(risk.icon, color: risk.color, size: 30),
+                child: Icon(risk.icon, color: risk.color, size: 26),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Nivel actual',
-                      style: TextStyle(
-                        color: Etapa3Palette.quiet,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
                     Text(
                       risk.label,
                       style: TextStyle(
                         color: risk.color,
-                        fontSize: 24,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      risk.title,
+                      style: const TextStyle(
+                        color: Etapa3Palette.text,
+                        fontSize: 17,
                         fontWeight: FontWeight.w900,
-                        height: 1.05,
                       ),
                     ),
                   ],
@@ -272,105 +239,93 @@ class _RiskHero extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 12),
           Text(
-            risk.title,
-            style: const TextStyle(
-              color: Etapa3Palette.text,
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            risk.description,
+            risk.summary,
             style: const TextStyle(
               color: Etapa3Palette.muted,
               fontSize: 13,
               height: 1.45,
             ),
           ),
-          const SizedBox(height: 18),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(99),
-            child: LinearProgressIndicator(
-              value: _riskProgress(risk.level),
-              minHeight: 8,
-              backgroundColor: const Color(0xFF32343E),
-              valueColor: AlwaysStoppedAnimation<Color>(risk.color),
-            ),
-          ),
         ],
       ),
     );
   }
-
-  double _riskProgress(_HealthRiskLevel level) {
-    switch (level) {
-      case _HealthRiskLevel.low:
-        return 0.32;
-      case _HealthRiskLevel.moderate:
-        return 0.64;
-      case _HealthRiskLevel.high:
-        return 0.92;
-    }
-  }
 }
 
-class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({required this.summary, required this.color});
+class _RiskLevelRow extends StatelessWidget {
+  const _RiskLevelRow({
+    required this.color,
+    required this.icon,
+    required this.label,
+    required this.title,
+    required this.description,
+    required this.active,
+  });
 
-  final String summary;
   final Color color;
+  final IconData icon;
+  final String label;
+  final String title;
+  final String description;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
-    return GlassPanel(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.health_and_safety_outlined, color: color, size: 24),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              summary,
-              style: const TextStyle(
-                color: Etapa3Palette.text,
-                fontSize: 14,
-                height: 1.45,
-                fontWeight: FontWeight.w700,
+    return Opacity(
+      opacity: active ? 1.0 : 0.62,
+      child: GlassPanel(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Etapa3Palette.text,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      color: Etapa3Palette.muted,
+                      fontSize: 12,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            const SizedBox(width: 10),
+            StatusPill(label: label, color: color),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _RiskLevelWrap extends StatelessWidget {
-  const _RiskLevelWrap({required this.levels});
+class _CategoryTile extends StatelessWidget {
+  const _CategoryTile({
+    required this.icon,
+    required this.accent,
+    required this.title,
+    required this.description,
+  });
 
-  final List<_HealthRiskInfo> levels;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (final level in levels) ...[
-          _RiskLevelCard(level: level),
-          const SizedBox(height: 10),
-        ],
-      ],
-    );
-  }
-}
-
-class _RiskLevelCard extends StatelessWidget {
-  const _RiskLevelCard({required this.level});
-
-  final _HealthRiskInfo level;
+  final IconData icon;
+  final Color accent;
+  final String title;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -378,23 +333,31 @@ class _RiskLevelCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       child: Row(
         children: [
-          StatusPill(label: level.label, color: level.color, icon: level.icon),
-          const SizedBox(width: 12),
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: accent, size: 23),
+          ),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  level.title,
+                  title,
                   style: const TextStyle(
                     color: Etapa3Palette.text,
                     fontSize: 14,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  level.description,
+                  description,
                   style: const TextStyle(
                     color: Etapa3Palette.muted,
                     fontSize: 12,
@@ -410,37 +373,18 @@ class _RiskLevelCard extends StatelessWidget {
   }
 }
 
-class _RiskCategoryGrid extends StatelessWidget {
-  const _RiskCategoryGrid({required this.categories});
+class _TipTile extends StatelessWidget {
+  const _TipTile({
+    required this.impact,
+    required this.color,
+    required this.action,
+    required this.reason,
+  });
 
-  final List<_RiskCategory> categories;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final compact = constraints.maxWidth < 360;
-        return GridView.count(
-          crossAxisCount: compact ? 1 : 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: compact ? 2.15 : 0.82,
-          children: [
-            for (final category in categories)
-              _RiskCategoryCard(category: category),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _RiskCategoryCard extends StatelessWidget {
-  const _RiskCategoryCard({required this.category});
-
-  final _RiskCategory category;
+  final String impact;
+  final Color color;
+  final String action;
+  final String reason;
 
   @override
   Widget build(BuildContext context) {
@@ -449,96 +393,24 @@ class _RiskCategoryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: category.accent.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: category.accent.withValues(alpha: 0.22),
-              ),
-            ),
-            child: Icon(category.icon, color: category.accent, size: 22),
-          ),
-          const SizedBox(height: 12),
+          StatusPill(label: impact, color: color),
+          const SizedBox(height: 10),
           Text(
-            category.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+            action,
             style: const TextStyle(
               color: Etapa3Palette.text,
               fontSize: 14,
-              fontWeight: FontWeight.w900,
-              height: 1.15,
+              fontWeight: FontWeight.w800,
+              height: 1.3,
             ),
           ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: Text(
-              category.description,
-              overflow: TextOverflow.fade,
-              style: const TextStyle(
-                color: Etapa3Palette.muted,
-                fontSize: 12,
-                height: 1.35,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TipCard extends StatelessWidget {
-  const _TipCard({required this.tip});
-
-  final _HealthTip tip;
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassPanel(
-      padding: const EdgeInsets.all(15),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: tip.color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: tip.color.withValues(alpha: 0.22)),
-            ),
-            child: Icon(Icons.task_alt, color: tip.color, size: 22),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                StatusPill(label: tip.impact, color: tip.color),
-                const SizedBox(height: 10),
-                Text(
-                  tip.action,
-                  style: const TextStyle(
-                    color: Etapa3Palette.text,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900,
-                    height: 1.25,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  tip.reason,
-                  style: const TextStyle(
-                    color: Etapa3Palette.muted,
-                    fontSize: 12,
-                    height: 1.35,
-                  ),
-                ),
-              ],
+          const SizedBox(height: 5),
+          Text(
+            reason,
+            style: const TextStyle(
+              color: Etapa3Palette.muted,
+              fontSize: 12,
+              height: 1.35,
             ),
           ),
         ],

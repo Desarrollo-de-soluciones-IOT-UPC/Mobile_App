@@ -58,6 +58,8 @@ class ClientDevice {
     this.latestLevel,
     this.latestReadingDate,
     required this.readingsCount,
+    this.plug,
+    this.desiredPlug,
   });
 
   final int id;
@@ -72,6 +74,12 @@ class ClientDevice {
   final String? latestReadingDate;
   final int readingsCount;
 
+  /// Relay state reported by the device in its latest reading (ON | OFF | null).
+  final String? plug;
+
+  /// Relay state the user ordered from the app (ON | OFF | null = no order yet).
+  final String? desiredPlug;
+
   factory ClientDevice.fromJson(Map<String, dynamic> j) => ClientDevice(
         id: _toInt(j['id']),
         name: (j['name'] ?? '').toString(),
@@ -84,6 +92,8 @@ class ClientDevice {
         latestLevel: j['latestLevel']?.toString(),
         latestReadingDate: j['latestReadingDate']?.toString(),
         readingsCount: _toInt(j['readingsCount']),
+        plug: j['plug']?.toString(),
+        desiredPlug: j['desiredPlug']?.toString(),
       );
 }
 
@@ -150,6 +160,60 @@ class ClientAlert {
       );
 }
 
+class ClientReportBucket {
+  ClientReportBucket({
+    required this.label,
+    required this.average,
+    required this.peak,
+    required this.readings,
+    required this.alerts,
+  });
+
+  final String label;
+  final double average;
+  final double peak;
+  final int readings;
+  final int alerts;
+
+  factory ClientReportBucket.fromJson(Map<String, dynamic> j) =>
+      ClientReportBucket(
+        label: (j['label'] ?? '').toString(),
+        average: _toDouble(j['average']) ?? 0,
+        peak: _toDouble(j['peak']) ?? 0,
+        readings: _toInt(j['readings']),
+        alerts: _toInt(j['alerts']),
+      );
+}
+
+class ClientReport {
+  ClientReport({
+    required this.period,
+    required this.average,
+    required this.peak,
+    required this.totalReadings,
+    required this.totalAlerts,
+    required this.buckets,
+  });
+
+  final String period;
+  final double average;
+  final double peak;
+  final int totalReadings;
+  final int totalAlerts;
+  final List<ClientReportBucket> buckets;
+
+  factory ClientReport.fromJson(Map<String, dynamic> j) => ClientReport(
+        period: (j['period'] ?? 'month').toString(),
+        average: _toDouble(j['average']) ?? 0,
+        peak: _toDouble(j['peak']) ?? 0,
+        totalReadings: _toInt(j['totalReadings']),
+        totalAlerts: _toInt(j['totalAlerts']),
+        buckets: ((j['buckets'] as List?) ?? [])
+            .map((e) => ClientReportBucket.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+}
+
 class ClientDashboard {
   ClientDashboard({
     required this.deviceCount,
@@ -179,7 +243,7 @@ class ClientDashboard {
         currentAverage: _toDouble(j['currentAverage']) ?? 0,
         maxValue: _toDouble(j['maxValue']) ?? 0,
         level: (j['level'] ?? 'safe').toString(),
-        safetyThreshold: _toDouble(j['safetyThreshold']) ?? 0.5,
+        safetyThreshold: _toDouble(j['safetyThreshold']) ?? 200,
         alertCount: _toInt(j['alertCount']),
         devices: ((j['devices'] as List?) ?? [])
             .map((e) => ClientDevice.fromJson(e as Map<String, dynamic>))

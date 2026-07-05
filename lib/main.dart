@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'routes/app_routes.dart';
 import 'routes/etapa2_routes.dart';
 import 'routes/etapa3_routes.dart';
+import 'services/app_i18n.dart';
+import 'services/app_settings_store.dart';
 import 'services/onboarding_flow_store.dart';
 import 'services/session_store.dart';
 import 'theme/app_theme.dart';
@@ -10,6 +12,9 @@ import 'screens/etapa1/screen_7_pair_your_sensor.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await AppSettingsStore.init();
+  I18n.init();
 
   // Already authenticated → go straight to the dashboard.
   // Otherwise: returning user (account created) → login; brand-new user → splash.

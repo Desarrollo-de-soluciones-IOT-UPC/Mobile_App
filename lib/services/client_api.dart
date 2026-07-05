@@ -49,4 +49,84 @@ class ClientApi {
       ((await ApiClient.get('/client/alerts')) as List)
           .map((e) => ClientAlert.fromJson(e as Map<String, dynamic>))
           .toList();
+
+  /// Orders the device relay to open/close the power ("ON" | "OFF").
+  /// The edge picks up the order and drives the physical relay.
+  static Future<ClientDevice> setPlug(int deviceId, String plug) async =>
+      ClientDevice.fromJson(await ApiClient.patch(
+        '/client/devices/$deviceId/plug',
+        {'plug': plug},
+      ) as Map<String, dynamic>);
+
+  /// "Astra" assistant: sends the question (plus recent history) to the
+  /// backend, which proxies Gemini — the API key never ships in the app.
+  static Future<String> chat(
+      String message, List<Map<String, String>> history) async {
+    final data = await ApiClient.post('/client/chat', {
+      'message': message,
+      'history': history,
+    }) as Map<String, dynamic>;
+    return (data['reply'] ?? '').toString();
+  }
+
+  /// Aggregated radiation report: period = "month" | "year".
+  static Future<ClientReport> report(String period) async =>
+      ClientReport.fromJson(await ApiClient.get('/client/reports?period=$period')
+          as Map<String, dynamic>);
+
+  /// All the client's readings (history) — used by the CSV export.
+  static Future<List<ClientReading>> readings() async =>
+      ((await ApiClient.get('/client/readings')) as List)
+          .map((e) => ClientReading.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+  static Future<ClientProfile> updateProfile({
+    String? name,
+    String? phone,
+    String? location,
+    String? address,
+  }) async =>
+      ClientProfile.fromJson(await ApiClient.put('/client/profile', {
+        if (name != null) 'name': name,
+        if (phone != null) 'phone': phone,
+        if (location != null) 'location': location,
+        if (address != null) 'address': address,
+      }) as Map<String, dynamic>);
+
+  static Future<void> changePassword(
+      String currentPassword, String newPassword) async {
+    await ApiClient.patch('/client/password', {
+      'currentPassword': currentPassword,
+      'newPassword': newPassword,
+    });
+  }
+
+  /// Permanently deletes the authenticated client's account (GDPR-style).
+  /// Requires the current password as confirmation.
+  static Future<void> deleteAccount(String password) async {
+    await ApiClient.post('/client/account/delete', {'password': password});
+    await SessionStore.clear();
+  }
+
+  /// Public sign-up: creates a CLIENT account in "pending" state.
+  /// The user cannot log in until an admin activates the account.
+  static Future<void> register({
+    required String name,
+    required String email,
+    required String password,
+    String? phone,
+    String? address,
+  }) async {
+    await ApiClient.post(
+      '/auth/register',
+      {
+        'name': name,
+        'email': email,
+        'password': password,
+        if (phone != null && phone.isNotEmpty) 'phone': phone,
+        if (address != null && address.isNotEmpty) 'address': address,
+      },
+      auth: false,
+    );
+  }
 }
