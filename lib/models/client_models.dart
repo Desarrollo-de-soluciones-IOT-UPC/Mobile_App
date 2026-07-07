@@ -103,6 +103,7 @@ class ClientReading {
     this.value,
     this.level,
     this.readingDate,
+    this.recordedAt,
     this.deviceId,
     this.deviceName,
   });
@@ -111,6 +112,7 @@ class ClientReading {
   final double? value;
   final String? level;
   final String? readingDate;
+  final String? recordedAt; // precise ISO timestamp of the measurement
   final int? deviceId;
   final String? deviceName;
 
@@ -119,6 +121,7 @@ class ClientReading {
         value: _toDouble(j['value']),
         level: j['level']?.toString(),
         readingDate: j['readingDate']?.toString(),
+        recordedAt: j['recordedAt']?.toString(),
         deviceId: j['deviceId'] == null ? null : _toInt(j['deviceId']),
         deviceName: j['deviceName']?.toString(),
       );
@@ -135,6 +138,7 @@ class ClientAlert {
     this.deviceId,
     this.deviceName,
     this.time,
+    this.recordedAt,
   });
 
   final int id;
@@ -146,6 +150,7 @@ class ClientAlert {
   final int? deviceId;
   final String? deviceName;
   final String? time;
+  final String? recordedAt; // precise ISO timestamp (for relative "36 min ago")
 
   factory ClientAlert.fromJson(Map<String, dynamic> j) => ClientAlert(
         id: _toInt(j['id']),
@@ -157,6 +162,7 @@ class ClientAlert {
         deviceId: j['deviceId'] == null ? null : _toInt(j['deviceId']),
         deviceName: j['deviceName']?.toString(),
         time: j['time']?.toString(),
+        recordedAt: j['recordedAt']?.toString(),
       );
 }
 

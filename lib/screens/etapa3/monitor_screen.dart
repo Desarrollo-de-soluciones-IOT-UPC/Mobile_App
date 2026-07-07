@@ -614,7 +614,9 @@ class _ReadingRow extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  reading.readingDate ?? '',
+                  reading.recordedAt != null
+                      ? '${reading.readingDate ?? ''} · ${etapa3TimeOfDay(reading.recordedAt)}'
+                      : (reading.readingDate ?? ''),
                   style: const TextStyle(
                     color: Etapa3Palette.quiet,
                     fontSize: 12,

@@ -46,6 +46,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         address: [draft.address, draft.city, draft.country]
             .where((s) => s.trim().isNotEmpty)
             .join(', '),
+        clientType: draft.clientTypeValue,
+        contactName: draft.contactName,
+        taxId: draft.documentId,
+        industry: draft.industry,
       );
       await OnboardingFlowStore.markAccountCreated();
       if (!mounted) return;

@@ -30,8 +30,6 @@ class SystemSettingsScreen extends StatefulWidget {
 
 class _SystemSettingsScreenState extends State<SystemSettingsScreen> {
   bool pushAlerts = AppSettingsStore.pushAlerts;
-  bool autoCalibrate = AppSettingsStore.autoCalibrate;
-  bool cloudSync = AppSettingsStore.cloudSync;
 
   late Future<_SettingsData> _future;
   bool _busy = false;
@@ -301,28 +299,6 @@ class _SystemSettingsScreenState extends State<SystemSettingsScreen> {
         ),
         const SizedBox(height: 10),
         _SettingsSwitch(
-          icon: Icons.auto_fix_high_outlined,
-          title: tr('set_calib'),
-          subtitle: tr('set_calibSub'),
-          value: autoCalibrate,
-          onChanged: (value) {
-            AppSettingsStore.autoCalibrate = value;
-            setState(() => autoCalibrate = value);
-          },
-        ),
-        const SizedBox(height: 10),
-        _SettingsSwitch(
-          icon: Icons.cloud_sync_outlined,
-          title: tr('set_cloud'),
-          subtitle: tr('set_cloudSub'),
-          value: cloudSync,
-          onChanged: (value) {
-            AppSettingsStore.cloudSync = value;
-            setState(() => cloudSync = value);
-          },
-        ),
-        const SizedBox(height: 10),
-        _SettingsSwitch(
           icon: Icons.translate,
           title: tr('set_language'),
           subtitle: tr('set_langSub'),
@@ -355,22 +331,6 @@ class _SystemSettingsScreenState extends State<SystemSettingsScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        SectionLabel(tr('set_sensors')),
-        const SizedBox(height: 10),
-        if (data.devices.isEmpty)
-          GlassPanel(
-            child: Text(
-              tr('set_noSensors'),
-              style:
-                  const TextStyle(color: Etapa3Palette.muted, fontSize: 13),
-            ),
-          )
-        else
-          for (final device in data.devices) ...[
-            _DeviceTile(device: device),
-            const SizedBox(height: 10),
-          ],
         const SizedBox(height: 20),
         SectionLabel(tr('set_maintenance')),
         const SizedBox(height: 10),
@@ -549,59 +509,6 @@ class _SettingsSwitch extends StatelessWidget {
             inactiveThumbColor: Etapa3Palette.quiet,
             inactiveTrackColor: Etapa3Palette.stroke,
             onChanged: onChanged,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DeviceTile extends StatelessWidget {
-  const _DeviceTile({required this.device});
-
-  final ClientDevice device;
-
-  @override
-  Widget build(BuildContext context) {
-    final active = device.status.toLowerCase() == 'active';
-    final color = active ? Etapa3Palette.green : Etapa3Palette.amber;
-    return GlassPanel(
-      padding: const EdgeInsets.all(14),
-      child: Row(
-        children: [
-          Icon(Icons.sensors, color: color, size: 24),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  device.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Etapa3Palette.text,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  active ? tr('set_online') : device.status,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          StatusPill(
-            label: device.latestValue != null
-                ? '${etapa3Num(device.latestValue)} $etapa3Unit'
-                : '--',
-            color: etapa3LevelColor(device.latestLevel),
           ),
         ],
       ),

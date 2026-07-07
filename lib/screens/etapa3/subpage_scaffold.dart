@@ -46,32 +46,17 @@ class SubPageScaffold extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Etapa3Palette.text,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                                height: 1.1,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              subtitle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Etapa3Palette.quiet,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                        // Title only — header descriptions removed app-wide.
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Etapa3Palette.text,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            height: 1.1,
+                          ),
                         ),
                       ),
                       if (trailing != null) ...[

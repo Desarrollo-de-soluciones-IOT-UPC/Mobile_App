@@ -116,6 +116,10 @@ class ClientApi {
     required String password,
     String? phone,
     String? address,
+    String? clientType,
+    String? contactName,
+    String? taxId,
+    String? industry,
   }) async {
     await ApiClient.post(
       '/auth/register',
@@ -125,6 +129,10 @@ class ClientApi {
         'password': password,
         if (phone != null && phone.isNotEmpty) 'phone': phone,
         if (address != null && address.isNotEmpty) 'address': address,
+        if (clientType != null && clientType.isNotEmpty) 'clientType': clientType,
+        if (contactName != null && contactName.isNotEmpty) 'contactName': contactName,
+        if (taxId != null && taxId.isNotEmpty) 'taxId': taxId,
+        if (industry != null && industry.isNotEmpty) 'industry': industry,
       },
       auth: false,
     );

@@ -129,7 +129,7 @@ const Map<String, String> _en = {
   'vit_lvLow': 'Low',
   'vit_lvMid': 'Medium',
   'vit_lvHigh': 'High',
-  'vit_categories': 'RISK CATEGORIES',
+  'vit_categories': 'COMMON EXPOSURE SOURCES',
   'vit_catSleep': 'Sleep and rest',
   'vit_catSleepDesc':
       'Sleeping with your phone very close can increase exposure for several hours in a row.',
@@ -274,6 +274,17 @@ const Map<String, String> _en = {
   // Notifications
   'notif_dangerTitle': '⚠ Radiation DANGER detected',
 
+  // Danger power-cut modal
+  'danger_modalTitle': 'Dangerous radiation detected',
+  'danger_modalBody':
+      'Radiation reached a DANGER level on this sensor. Do you want to cut the power connected to it?',
+  'danger_cutPower': 'Cut the power',
+  'danger_keepOn': 'Keep it on',
+
+  // Relative time
+  'time_justNow': 'just now',
+  'time_ago_fmt': '{n} {u} ago',
+
   // Delete account
   'del_title': 'Delete account',
   'del_warning':
@@ -382,7 +393,7 @@ const Map<String, String> _es = {
   'vit_lvLow': 'Bajo',
   'vit_lvMid': 'Medio',
   'vit_lvHigh': 'Alto',
-  'vit_categories': 'CATEGORÍAS DE RIESGO',
+  'vit_categories': 'FUENTES COMUNES DE EXPOSICIÓN',
   'vit_catSleep': 'Sueño y descanso',
   'vit_catSleepDesc':
       'Dormir con el celular muy cerca puede aumentar la exposición durante varias horas seguidas.',
@@ -526,6 +537,17 @@ const Map<String, String> _es = {
 
   // Notifications
   'notif_dangerTitle': '⚠ PELIGRO de radiación detectado',
+
+  // Danger power-cut modal
+  'danger_modalTitle': 'Radiación peligrosa detectada',
+  'danger_modalBody':
+      'La radiación alcanzó un nivel de PELIGRO en este sensor. ¿Deseas cortar la corriente conectada a él?',
+  'danger_cutPower': 'Cortar la corriente',
+  'danger_keepOn': 'Mantener encendido',
+
+  // Relative time
+  'time_justNow': 'ahora mismo',
+  'time_ago_fmt': 'hace {n} {u}',
 
   // Delete account
   'del_title': 'Eliminar cuenta',

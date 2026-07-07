@@ -4,8 +4,10 @@ import 'routes/app_routes.dart';
 import 'routes/etapa2_routes.dart';
 import 'routes/etapa3_routes.dart';
 import 'services/app_i18n.dart';
+import 'services/app_navigator.dart';
 import 'services/app_settings_store.dart';
 import 'services/onboarding_flow_store.dart';
+import 'services/realtime_service.dart';
 import 'services/session_store.dart';
 import 'theme/app_theme.dart';
 import 'screens/etapa1/screen_7_pair_your_sensor.dart';
@@ -39,11 +41,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: appNavigatorKey,
       title: 'EmSafe',
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.dark,
       initialRoute: initialRoute,
+      // App-wide DANGER modal: pops "cut the power?" when one of the client's
+      // own sensors reports a DANGER reading over the WebSocket.
+      builder: (context, child) =>
+          DangerAlertGate(child: child ?? const SizedBox.shrink()),
       routes: AppRoutes.routes,
       onGenerateRoute: (settings) {
         if (settings.name == AppRoutes.pairYourSensor) {

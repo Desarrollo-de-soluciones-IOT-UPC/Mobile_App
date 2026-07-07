@@ -297,7 +297,7 @@ class _AlertCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      alert.time ?? '',
+                      etapa3TimeAgo(alert.recordedAt, fallbackDate: alert.time),
                       style: const TextStyle(
                         color: Etapa3Palette.quiet,
                         fontSize: 11,
