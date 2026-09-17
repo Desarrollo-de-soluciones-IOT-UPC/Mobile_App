@@ -1,0 +1,71 @@
+# CI del móvil: analiza y COMPILA la app.
+#
+# `flutter analyze` no compila el árbol entero. En la fase 11, tras mover 66
+# archivos, analyze pasó y aun así hubo que construir el APK para tener la
+# certeza de que todo enlazaba. Por eso este workflow hace las dos cosas.
+
+name: CI — Mobile
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analizar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.2'
+          channel: stable
+          cache: true
+
+      - name: Instalar dependencias
+        run: flutter pub get
+
+      # Ojo: `flutter analyze` sale con código 1 ante CUALQUIER hallazgo, también
+      # los `info` de estilo — `--fatal-warnings` no los indulta. El árbol está
+      # hoy en "No issues found!", así que cualquier hallazgo nuevo (un import
+      # muerto, una variable sin usar: el rastro típico de un refactor a medio
+      # terminar) pone el job en rojo.
+      - name: Analizar
+        run: flutter analyze --fatal-warnings
+
+  build:
+    name: Construir APK
+    runs-on: ubuntu-latest
+    needs: analyze
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Configurar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.2'
+          channel: stable
+          cache: true
+
+      - name: Instalar dependencias
+        run: flutter pub get
+
+      - name: Construir APK (debug)
+        run: flutter build apk --debug
+
+      - name: Publicar el APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: emsafe-app-debug
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 7

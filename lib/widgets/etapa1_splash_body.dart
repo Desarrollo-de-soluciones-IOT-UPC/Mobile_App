@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Etapa1SplashBody extends StatelessWidget {
+class SplashBody extends StatelessWidget {
   final VoidCallback? onContinue;
 
-  const Etapa1SplashBody({super.key, this.onContinue});
+  const SplashBody({super.key, this.onContinue});
 
   @override
   Widget build(BuildContext context) {
@@ -63,5 +63,4 @@ class Etapa1SplashBody extends StatelessWidget {
     );
   }
 }
-
 

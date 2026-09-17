@@ -43,3 +43,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Gradle deja su salida aqui y el `/build/` de arriba solo cubre la raiz del
+# proyecto Flutter, no la del subproyecto Android: sin estas dos lineas un
+# `git add -A` se lleva cientos de MB de artefactos al commit.
+/android/build/
+/android/app/build/

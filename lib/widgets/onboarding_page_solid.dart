@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
-
+import '../core/app_theme.dart';
 /// Wrapper mejorado para pantallas onboarding.
 /// - background: color base
 /// - showBrandHeader: muestra el header superior con logo + Skip

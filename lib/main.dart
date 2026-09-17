@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'core/app_i18n.dart';
+import 'core/app_navigator.dart';
+import 'core/app_settings_store.dart';
+import 'core/app_theme.dart';
+import 'core/onboarding_flow_store.dart';
+import 'core/session_store.dart';
+import 'presentation/home/widgets/danger_alert_gate.dart';
+import 'presentation/onboarding/screen_7_pair_your_sensor.dart';
 import 'routes/app_routes.dart';
-import 'routes/etapa2_routes.dart';
-import 'routes/etapa3_routes.dart';
-import 'services/app_i18n.dart';
-import 'services/app_navigator.dart';
-import 'services/app_settings_store.dart';
-import 'services/onboarding_flow_store.dart';
-import 'services/realtime_service.dart';
-import 'services/session_store.dart';
-import 'theme/app_theme.dart';
-import 'screens/etapa1/screen_7_pair_your_sensor.dart';
+import 'routes/auth_routes.dart';
+import 'routes/home_routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,9 +22,9 @@ Future<void> main() async {
   // Otherwise: returning user (account created) → login; brand-new user → splash.
   final String initialRoute;
   if (await SessionStore.isLoggedIn()) {
-    initialRoute = Etapa3Routes.dashboardOverview;
+    initialRoute = HomeRoutes.dashboardOverview;
   } else if (await OnboardingFlowStore.hasCreatedAccount()) {
-    initialRoute = Etapa2Routes.login;
+    initialRoute = AuthRoutes.login;
   } else {
     initialRoute = AppRoutes.splash1;
   }

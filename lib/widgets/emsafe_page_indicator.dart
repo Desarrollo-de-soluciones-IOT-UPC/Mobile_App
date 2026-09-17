@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
-
+import '../core/app_theme.dart';
 class EmsafePageIndicator extends StatelessWidget {
   const EmsafePageIndicator({
     super.key,
